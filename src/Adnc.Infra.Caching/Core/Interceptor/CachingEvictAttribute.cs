@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Adnc.Infra.Caching.Core.Interceptor
+{
+    /// <summary>
+    /// Adnc.Infra.Caching evict attribute.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, Inherited = true)]
+    public class CachingEvictAttribute : CachingInterceptorAttribute
+    {
+        /// <summary>
+        /// Gets or sets a value indicating whether evict all cached values by cachekey prefix
+        /// </summary>
+        /// <remarks>
+        /// This need to use with CacheKeyPrefix.
+        /// </remarks>
+        /// <value><c>true</c> if is all; otherwise, <c>false</c>.</value>
+        //public bool IsAll { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether is before.
+        /// </summary>
+        /// <value><c>true</c> if is before; otherwise, <c>false</c>.</value>
+        //public bool IsBefore { get; set; } = false;
+
+        /// <summary>
+        /// The cache keys
+        /// </summary>
+        public string[] CacheKeys { get; set; } = new string[] { };
+    }
+}
