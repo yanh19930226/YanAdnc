@@ -21,7 +21,10 @@ namespace Adnc.Infra.Consul.TokenGenerator
         public string Create()
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+<<<<<<< HEAD
             //获取去除Bearer之后的Token值
+=======
+>>>>>>> 583bfc29826af0e1287975193b7c50f2995cdfdf
             var tokenTxt = token?.Remove(0, 7);
             return tokenTxt;
         }

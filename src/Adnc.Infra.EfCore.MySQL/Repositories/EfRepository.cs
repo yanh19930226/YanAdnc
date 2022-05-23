@@ -1,8 +1,10 @@
 ﻿using Adnc.Infra.Core.System.Extensions.Collection;
+using Adnc.Infra.Core.System.Extensions.Expressions;
 using Adnc.Infra.Repository.Entities;
 using Adnc.Infra.Repository.Entities.EfEnities;
 using Adnc.Infra.Repository.IRepositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace Adnc.Infra.EfCore.MySQL.Repositories
 {
@@ -82,9 +85,7 @@ namespace Adnc.Infra.EfCore.MySQL.Repositories
             else
                 result = ascending
                           ? await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(query.OrderBy(orderByExpression), cancellationToken)
-                          : await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(query.OrderByDescending(orderByExpression), cancellationToken)
-                          ;
-
+                          : await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(query.OrderByDescending(orderByExpression), cancellationToken);
             return result;
         }
 
@@ -99,9 +100,7 @@ namespace Adnc.Infra.EfCore.MySQL.Repositories
             else
                 result = ascending
                           ? await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(query.OrderBy(orderByExpression).Select(selector), cancellationToken)
-                          : await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(query.OrderByDescending(orderByExpression).Select(selector), cancellationToken)
-                          ;
-
+                          : await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(query.OrderByDescending(orderByExpression).Select(selector), cancellationToken);
             return result;
         }
 
@@ -125,42 +124,13 @@ namespace Adnc.Infra.EfCore.MySQL.Repositories
                 rows = 0;
             }
             return rows;
-
-            #region old code
-
-#pragma warning disable S125 // Sections of code should not be commented out
-            /*
-                        //如果实体被跟踪，调用Ef原生方法删除
-                        if (entity != null)
-                        {
-                            DbContext.Remove(entity);
-                            return await DbContext.SaveChangesAsync();
-                        }
-
-                        var mapping = DbContext.Model.FindEntityType(typeof(TEntity)); //3.0
-                        var properties = mapping.GetProperties();
-                        var schema = mapping.GetSchema() ?? "dbo";
-                        var tableName = mapping.GetTableName();
-                        var keyName = properties.Where(p => p.IsPrimaryKey()).Select(p => p.PropertyInfo.Name).First();
-                        var isSoftDelete = properties.Any(p => p.Name == "IsDeleted");
-
-                        var sql = isSoftDelete
-                                  ? $"update {tableName} set IsDeleted=true "
-                                  : $"delete from {tableName} "
-                                  ;
-                        var where = $" where {keyName}={keyValue};";
-
-                        return await DbContext.Database.ExecuteSqlRawAsync(string.Concat(sql, where), cancellationToken);
-                        */
-#pragma warning restore S125 // Sections of code should not be commented outs
-
-            #endregion old code
         }
 
         public async Task<int> DeleteRangeAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default)
         {
             var enityType = typeof(TEntity);
             var hasSoftDeleteMember = typeof(ISoftDelete).IsAssignableFrom(enityType);
+            //是否是软删除
             if (hasSoftDeleteMember)
             {
                 var newExpression = Expression.New(enityType);
@@ -170,6 +140,7 @@ namespace Adnc.Infra.EfCore.MySQL.Repositories
                 var lambdaExpression = Expression.Lambda<Func<TEntity, TEntity>>(memberInitExpression, paramExpression);
                 return await DbContext.Set<TEntity>().Where(whereExpression).UpdateAsync(lambdaExpression, cancellationToken);
             }
+            //直接删除
             return await DbContext.Set<TEntity>().Where(whereExpression).DeleteAsync(cancellationToken);
         }
 
@@ -180,8 +151,10 @@ namespace Adnc.Infra.EfCore.MySQL.Repositories
 
             var entry = DbContext.Entry(entity);
 
+            #region 实体状态不对
             if (entry.State == EntityState.Added || entry.State == EntityState.Deleted)
-                throw new ArgumentException($"{nameof(entity)},实体状态为{nameof(entry.State)}");
+                throw new ArgumentException($"{nameof(entity)},实体状态为{nameof(entry.State)}"); 
+            #endregion
 
             if (entry.State == EntityState.Unchanged)
                 return await Task.FromResult(0);
@@ -205,44 +178,20 @@ namespace Adnc.Infra.EfCore.MySQL.Repositories
                 });
             }
 
-            #region removed code
-
-#pragma warning disable S125 // Sections of code should not be commented out
-            /*
-                            var originalEntity = DbContext.Set<TEntity>().Local.FirstOrDefault(x => x.Id == entity.Id);
-                            if (originalEntity == null)
-                            {
-                                entry.State = EntityState.Unchanged;
-                                updatingExpressions.ForEach(expression =>
-                                {
-                                    entry.Property(expression).IsModified = true;
-                                });
-                            }
-                            else
-                            {
-                                entry.CurrentValues.SetValues(entity);
-                                var propNames = updatingExpressions.Select(x => x.GetMemberName()).ToArray();
-                                entry.Properties.ForEach(propEntry =>
-                                {
-                                    if (!propNames.Contains(propEntry.Metadata.Name))
-                                        propEntry.IsModified = false;
-                                });
-                            }
-                            */
-#pragma warning restore S125 // Sections of code should not be commented out
-
-            #endregion removed code
-
             return await DbContext.SaveChangesAsync(cancellationToken);
         }
 
         public Task<int> UpdateRangeAsync(Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TEntity>> updatingExpression, CancellationToken cancellationToken = default)
         {
+            #region 该实体有RowVersion列，不能使用批量更新
+
             var enityType = typeof(TEntity);
             var hasConcurrencyMember = typeof(IConcurrency).IsAssignableFrom(enityType);
 
             if (hasConcurrencyMember)
                 throw new ArgumentException("该实体有RowVersion列，不能使用批量更新");
+
+            #endregion
 
             return UpdateRangeInternalAsync(whereExpression, updatingExpression, cancellationToken);
         }

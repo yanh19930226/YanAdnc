@@ -1,0 +1,55 @@
+﻿using Adnc.Infra.Core.Adnc.Exceptions;
+using Adnc.Infra.Core.System.Extensions.String;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Adnc.Infra.Core.Adnc.Guard
+{
+    public static class GuardExtensions
+    {
+        public static T GTZero<T>(this IGuard _, T value, string parameterName, string? message = null)
+            where T : struct, IConvertible, IComparable<T>
+        {
+            var target = default(T);
+            if (value.CompareTo(target) < 1)
+                throw new BusinessException(message ?? $"{nameof(parameterName)}不能小于0");
+            return value;
+        }
+
+        public static string NotNullOrEmpty(this IGuard _, string value, string parameterName, string? message = null)
+        {
+            if (value.IsNullOrWhiteSpace())
+                throw new BusinessException(message ?? $"{nameof(parameterName)}不能是空");
+            return value;
+        }
+
+        public static T NotNullOrAny<T>(this IGuard _, T value, string parameterName, string? message = null)
+            where T : ICollection
+        {
+            if (value is null || value.Count < 1)
+                throw new BusinessException(message ?? $"{nameof(parameterName)}不能是空");
+            return value;
+        }
+
+        public static T NotNull<T>(this IGuard _, T value, [NotNull] string parameterName, string? message = null)
+            where T : class
+        {
+            if (value is null)
+                throw new BusinessException(message ?? $"{nameof(parameterName)}不能是空");
+
+            return value;
+        }
+
+        public static void ThrowIf(this IGuard _, Func<bool> predicate, string? message)
+        {
+            var result = predicate.Invoke();
+            if (result)
+                throw new BusinessException(message);
+        }
+    }
+}
