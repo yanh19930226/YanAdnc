@@ -10,14 +10,11 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Adnc.Infra.Consul.Consumer
+namespace Adnc.Infra.Consul.Discover.Handler
 {
-    /// <summary>
-    /// 发送请求
-    /// </summary>
     public class ConsulDiscoverDelegatingHandler : DelegatingHandler
     {
-        private static readonly SemaphoreSlim _slimlock = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim _slimlock = new(1, 1);
         private readonly ConsulClient _consulClient;
         private readonly IEnumerable<ITokenGenerator> _tokenGenerators;
         private readonly IMemoryCache _memoryCache;
@@ -33,6 +30,7 @@ namespace Adnc.Infra.Consul.Consumer
             _memoryCache = memoryCache;
             _logger = logger;
         }
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request
             , CancellationToken cancellationToken)
         {
@@ -51,22 +49,18 @@ namespace Adnc.Infra.Consul.Consumer
                     if (!string.IsNullOrEmpty(tokenTxt))
                         request.Headers.Authorization = new AuthenticationHeaderValue(auth.Scheme, tokenTxt);
                 }
-
-                //从缓存中获取服务地址列表
                 var serviceUrls = await GetAllHealthServiceAddressAsync(currentUri.Host, serviceAddressCacheKey);
-                //健康地址中选择一个地址
-                var serviceUrl = GetServiceAddress(serviceUrls);
-                //地址为空报错
+                var serviceUrl = LoadRandomBalancer(serviceUrls);
                 if (serviceUrl.IsNullOrWhiteSpace())
                     throw new ArgumentNullException($"{currentUri.Host} does not contain helath service address!");
                 else
                     request.RequestUri = new Uri($"{currentUri.Scheme}://{serviceUrl}{currentUri.PathAndQuery}");
 
-                //如果调用地址是https,使用http2
-                if (request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                if (request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) && request.Version != new Version(2, 0))
                     request.Version = new Version(2, 0);
 
                 #region 缓存处理
+
                 /* 这里高并发会有问题，需要优化，先注释
                 if (request.Method == HttpMethod.Get)
                 {
@@ -105,7 +99,6 @@ namespace Adnc.Infra.Consul.Consumer
 
                 #endregion 缓存处理
 
-                //调用地址获取请求结果
                 var responseMessage = await base.SendAsync(request, cancellationToken);
                 return responseMessage;
             }
@@ -120,7 +113,7 @@ namespace Adnc.Infra.Consul.Consumer
             }
         }
 
-        private string GetServiceAddress(IEnumerable<string> healthAddresses)
+        private string LoadRandomBalancer(IEnumerable<string> healthAddresses)
         {
             if (healthAddresses != null && healthAddresses.Any())
             {
@@ -167,7 +160,5 @@ namespace Adnc.Infra.Consul.Consumer
                 _slimlock.Release();
             }
         }
-
-
     }
 }

@@ -9,177 +9,155 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Adnc.Infra.Consul.Registration
 {
-    /// <summary>
-    /// ConsulRegistration
-    /// </summary>
-    public static class ConsulRegistration
+    public sealed class ConsulRegistration
     {
-        /// <summary>
-        /// Register
-        /// </summary>
-        /// <param name="app"></param>
-        public static void Register(IApplicationBuilder app)
+        private readonly ConsulConfig _consulConfig;
+        private readonly IHostApplicationLifetime _hostApplicationLifetime;
+        private readonly ILogger<ConsulRegistration> _logger;
+        private readonly ConsulClient _consulClient;
+        //private readonly IServerAddressesFeature _serverAddressesFeature;
+
+        public ConsulRegistration(
+            IOptions<ConsulConfig> consulOption
+            , ConsulClient consulClient
+            , IHostApplicationLifetime hostApplicationLifetime
+            , IServiceProvider serviceProvider
+            , ILogger<ConsulRegistration> logger)
         {
-            //获取服务consul配置
-            var consulOption = app.ApplicationServices.GetRequiredService<IOptions<ConsulConfig>>().Value;
-            //获取consul服务端
-            var consulClient = new ConsulClient(cfg => cfg.Address = new Uri(consulOption.ConsulUrl));
+            _consulConfig = consulOption.Value;
+            _consulClient = consulClient;
+            _hostApplicationLifetime = hostApplicationLifetime;
+            //_serverAddressesFeature = serviceProvider.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>();
+            _logger = logger;
+        }
 
-            var serviceAddress = GetServiceAddressInternal(app, consulOption);
-            //服务名称创建服务唯一识别号
-            var serverId = $"{consulOption.ServiceName}.{DateTime.Now.Ticks}";
+        private AgentServiceRegistration GetAgentServiceRegistration(Uri serviceAddress)
+        {
+            if (serviceAddress is null)
+                throw new ArgumentNullException(nameof(serviceAddress));
 
-            var logger = app.ApplicationServices.GetRequiredService<ILogger<ConsulConfig>>();
-            logger.LogInformation("serviceAddress:{0}:", serviceAddress);
-
-            var lifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
-
-            lifetime.ApplicationStarted.Register(() =>
+            //服务名Id
+            var serverId = $"{_consulConfig.ServiceName}.{DateTime.Now.Ticks}";
+            //https还是http
+            var protocol = serviceAddress.Scheme;
+            //服务的IP地址
+            var host = serviceAddress.Host;
+            //服务的端口
+            var port = serviceAddress.Port;
+            //注册信息
+            var registrationInstance = new AgentServiceRegistration()
             {
-                var protocol = serviceAddress.Scheme;
-                var host = serviceAddress.Host;
-                var port = serviceAddress.Port;
-                var check = new AgentServiceCheck
+                ID = serverId,
+                Name = _consulConfig.ServiceName,
+                Address = host,
+                Port = port,
+                Meta = new Dictionary<string, string>() { ["Protocol"] = protocol },
+                Tags = _consulConfig.ServerTags,
+                Check = new AgentServiceCheck
                 {
                     //服务停止多久后进行注销
-                    DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(60),
+                    DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(_consulConfig.DeregisterCriticalServiceAfter),
                     //健康检查间隔,心跳间隔
-                    Interval = TimeSpan.FromSeconds(6),
+                    Interval = TimeSpan.FromSeconds(_consulConfig.HealthCheckIntervalInSecond),
                     //健康检查地址
-                    HTTP = $"{protocol}://{host}:{port}/{consulOption.HealthCheckUrl}",
+                    HTTP = $"{protocol}://{host}:{port}/{_consulConfig.HealthCheckUrl}",
                     //超时时间
-                    Timeout = TimeSpan.FromSeconds(6),
-                };
+                    Timeout = TimeSpan.FromSeconds(_consulConfig.Timeout),
+                }
+            };
+            return registrationInstance;
+        }
 
-                var registration = new AgentServiceRegistration()
+        private void CheckConfig()
+        {
+            if (_consulConfig == null)
+                throw new ArgumentException(nameof(_consulConfig));
+            if (string.IsNullOrEmpty(_consulConfig.ConsulUrl))
+                throw new ArgumentException(nameof(_consulConfig.ConsulUrl));
+            if (string.IsNullOrEmpty(_consulConfig.ServiceName))
+                throw new ArgumentException(nameof(_consulConfig.ServiceName));
+            if (string.IsNullOrEmpty(_consulConfig.HealthCheckUrl))
+                throw new ArgumentException(nameof(_consulConfig.HealthCheckUrl));
+            if (_consulConfig.HealthCheckIntervalInSecond <= 0)
+                throw new ArgumentException(nameof(_consulConfig.HealthCheckIntervalInSecond));
+            if (_consulConfig.DeregisterCriticalServiceAfter <= 0)
+                throw new ArgumentException(nameof(_consulConfig.DeregisterCriticalServiceAfter));
+            if (_consulConfig.Timeout <= 0)
+                throw new ArgumentException(nameof(_consulConfig.Timeout));
+        }
+
+        public void Register(Uri serviceAddress)
+        {
+            if (serviceAddress is null)
+                throw new ArgumentNullException(nameof(serviceAddress));
+
+            var instance = GetAgentServiceRegistration(serviceAddress);
+            Register(instance);
+        }
+
+        public void Register(AgentServiceRegistration instance)
+        {
+            if (instance is null)
+                throw new ArgumentNullException(nameof(instance));
+
+            CheckConfig();
+            var protocol = instance.Meta["Protocol"];
+            _logger.LogInformation(@$"register to consul ({protocol}://{instance.Address}:{instance.Port})");
+            _hostApplicationLifetime.ApplicationStarted.Register(async () => await _consulClient.Agent.ServiceRegister(instance));
+            _hostApplicationLifetime.ApplicationStopping.Register(async () => await _consulClient.Agent.ServiceDeregister(instance.ID));
+        }
+
+        #region GetIpAddress
+
+        /// <summary>
+        /// get all ip address
+        /// </summary>
+        public List<string> GetServerIpAddress()
+        => System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
+                                           .Select(p => p.GetIPProperties())
+                                           .SelectMany(p => p.UnicastAddresses)
+                                           .Where(p => p.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && !IPAddress.IsLoopback(p.Address))
+                                           .Select(p => p.Address.ToString()).ToList();
+
+        /// <summary>
+        /// get all ip address
+        /// </summary>
+        /// <param name="netType">"InterNetwork":ipv4，"InterNetworkV6":ipv6</param>
+        public List<string> GetLocalIpAddress(string netType)
+        {
+            string hostName = Dns.GetHostName();
+            IPAddress[] addresses = Dns.GetHostAddresses(hostName);
+
+            var IPList = new List<string>();
+            if (netType == string.Empty)
+            {
+                for (int i = 0; i < addresses.Length; i++)
                 {
-                    ID = serverId,
-                    Name = consulOption.ServiceName,
-                    Address = host,
-                    Port = port,
-                    Meta = new Dictionary<string, string>() { ["Protocol"] = protocol },
-                    Tags = consulOption.ServerTags,
-                    Check = check
-                };
-
-                consulClient.Agent.ServiceRegister(registration).Wait();
-            });
-
-            lifetime.ApplicationStopping.Register(() =>
+                    IPList.Add(addresses[i].ToString());
+                }
+            }
+            else
             {
-                consulClient.Agent.ServiceDeregister(serverId).Wait();
-            });
-        }
-
-        public static Uri GetServiceAddress(IApplicationBuilder app, ConsulConfig consulOption)
-        {
-            return GetServiceAddressInternal(app, consulOption);
-        }
-
-        private static Uri GetServiceAddressInternal(IApplicationBuilder app, ConsulConfig consulOption)
-        {
-            var errorMsg = string.Empty;
-            Uri serviceAddress = default;
-
-            #region 配置Consul
-            if (consulOption == null)
-                throw new Exception("请正确配置Consul");
-
-            if (string.IsNullOrEmpty(consulOption.ConsulUrl))
-                throw new Exception("请正确配置ConsulUrl");
-
-            if (string.IsNullOrEmpty(consulOption.ServiceName))
-                throw new Exception("请正确配置ServiceName");
-
-            if (string.IsNullOrEmpty(consulOption.HealthCheckUrl))
-                throw new Exception("请正确配置HealthCheckUrl");
-
-            if (consulOption.HealthCheckIntervalInSecond <= 0)
-                throw new Exception("请正确配置HealthCheckIntervalInSecond"); 
-            #endregion
-
-            //获取网卡所有Ip地址，排除回路地址
-            var allIPAddress = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
-                               .Select(p => p.GetIPProperties())
-                               .SelectMany(p => p.UnicastAddresses)
-                               .Where(p => p.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && !System.Net.IPAddress.IsLoopback(p.Address))
-                               .Select(p => p.Address.ToString()).ToArray();
-
-            //获取web服务器监听地址，也就是提供访问的地址
-            var listenAddresses = app.ServerFeatures.Get<IServerAddressesFeature>().Addresses.ToList();
-            List<Uri> listenUrls = new List<Uri>();
-            listenAddresses.ForEach(a =>
-            {
-                var address = a.Replace("[::]", "0.0.0.0")
-                               .Replace("+", "0.0.0.0")
-                               .Replace("*", "0.0.0.0");
-
-                listenUrls.Add(new Uri(address));
-            });
-
-            var logger = app.ApplicationServices.GetRequiredService<ILogger<ConsulConfig>>();
-
-            //第一种注册方式，在配置文件中指定服务地址
-            //如果配置了服务地址, 只需要检测是否在listenUrls里面即可
-            if (!string.IsNullOrEmpty(consulOption.ServiceUrl))
-            {
-                logger.LogInformation("consulOption.ServiceUrl:{0}", consulOption.ServiceUrl);
-
-                serviceAddress = new Uri(consulOption.ServiceUrl);
-                bool isExists = listenUrls.Where(p => p.Host == serviceAddress.Host || p.Host == "0.0.0.0").Any();
-                if (isExists)
-                    return serviceAddress;
-                else
-                    throw new Exception($"服务{consulOption.ServiceUrl}配置错误 listenUrls={string.Join(',', (IEnumerable<Uri>)listenUrls)}");
+                //AddressFamily.InterNetwork = IPv4,
+                //AddressFamily.InterNetworkV6= IPv6
+                for (int i = 0; i < addresses.Length; i++)
+                {
+                    if (addresses[i].AddressFamily.ToString() == netType)
+                    {
+                        IPList.Add(addresses[i].ToString());
+                    }
+                }
             }
 
-            //第二种注册方式，服务地址通过docker环境变量(DOCKER_LISTEN_HOSTANDPORT)指定。
-            //可以写在dockerfile文件中，也可以运行容器时指定。运行容器时指定才是最合理的,大家看各自的情况怎么处理吧。
-            var dockerListenServiceUrl = Environment.GetEnvironmentVariable("DOCKER_LISTEN_HOSTANDPORT");
-            if (!string.IsNullOrEmpty(dockerListenServiceUrl))
-            {
-                logger.LogInformation("dockerListenServiceUrl:{0}", dockerListenServiceUrl);
-                serviceAddress = new Uri(dockerListenServiceUrl);
-                return serviceAddress;
-            }
+            return IPList;
+        } 
 
-            //第三种注册方式，注册程序自动获取服务地址
-            //本机所有可用IP与listenUrls进行匹配, 如果listenUrl是"0.0.0.0"或"[::]", 则任意IP都符合匹配
-            var matches = allIPAddress.SelectMany(ip =>
-                                      listenUrls
-                                      .Where(uri => ip == uri.Host || uri.Host == "0.0.0.0")
-                                      .Select(uri => new { Protocol = uri.Scheme, ServiceIP = ip, Port = uri.Port })
-                                      ).ToList();
-
-            //过滤无效地址
-            var filteredMatches = matches.Where(p => !p.ServiceIP.Contains("0.0.0.0")
-                                                && !p.ServiceIP.Contains("localhost")
-                                                && !p.ServiceIP.Contains("127.0.0.1")
-                                                );
-
-            var finalMatches = filteredMatches.ToList();
-
-            //没有匹配的地址,抛出异常
-            if (finalMatches.Count() == 0)
-                throw new Exception($"没有匹配的Ip地址=[{string.Join(',', allIPAddress)}], urls={string.Join(',', (IEnumerable<Uri>)listenUrls)}");
-
-            //只有一个匹配,直接返回
-            if (finalMatches.Count() == 1)
-            {
-                serviceAddress = new Uri($"{finalMatches[0].Protocol}://{ finalMatches[0].ServiceIP}:{finalMatches[0].Port}");
-                logger.LogInformation("serviceAddress:{0}", serviceAddress);
-                return serviceAddress;
-            }
-
-            //匹配多个，直接返回第一个
-            serviceAddress = new Uri($"{finalMatches[0].Protocol}://{ finalMatches[0].ServiceIP}:{finalMatches[0].Port}");
-            logger.LogInformation("serviceAddress-first:{0}", serviceAddress);
-            return serviceAddress;
-        }
+        #endregion
     }
 }
