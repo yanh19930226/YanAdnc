@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Infrastructures\Adnc.Infra.Core\Adnc.Infra.Core.csproj" />
     <ProjectReference Include="..\Infrastructures\Adnc.Infra.Repository\Adnc.Infra.Repository.csproj" />
   </ItemGroup>
 

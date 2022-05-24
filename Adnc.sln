@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adnc.Infra.Consul", "src\Ad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adnc.Infra.Dapper", "src\Adnc.Infra.Dapper\Adnc.Infra.Dapper.csproj", "{08EF239E-D37B-45EC-A5A3-9312421D507F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adnc.Infra.Mongo", "src\Adnc.Infra.Mongo\Adnc.Infra.Mongo.csproj", "{26DF9FA4-31C5-4640-BB9B-3950C8E66B86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{08EF239E-D37B-45EC-A5A3-9312421D507F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08EF239E-D37B-45EC-A5A3-9312421D507F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08EF239E-D37B-45EC-A5A3-9312421D507F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26DF9FA4-31C5-4640-BB9B-3950C8E66B86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26DF9FA4-31C5-4640-BB9B-3950C8E66B86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26DF9FA4-31C5-4640-BB9B-3950C8E66B86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26DF9FA4-31C5-4640-BB9B-3950C8E66B86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +89,7 @@ Global
 		{8213D3FC-FB58-4C28-A80F-012DFDF477BF} = {7AD00729-8BB2-4CD6-87A7-61D1E59336F8}
 		{CB1976F2-C421-4E2B-A1D2-07BCCDAC1A4B} = {7AD00729-8BB2-4CD6-87A7-61D1E59336F8}
 		{08EF239E-D37B-45EC-A5A3-9312421D507F} = {7AD00729-8BB2-4CD6-87A7-61D1E59336F8}
+		{26DF9FA4-31C5-4640-BB9B-3950C8E66B86} = {7AD00729-8BB2-4CD6-87A7-61D1E59336F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C20D7740-16F3-42CF-8A90-B0F7CDD388AC}
