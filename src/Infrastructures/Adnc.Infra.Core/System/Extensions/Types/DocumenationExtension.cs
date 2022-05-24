@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Xml;
 
-namespace Adnc.Infra.Core.System.Extensions.Type
+namespace Adnc.Infra.Core.System.Extensions.Types
 {
     /// <summary>
     /// Utility class to provide documentation for various types where available with the assembly

@@ -1,4 +1,5 @@
-﻿using Adnc.Infra.EfCore.MySQL.Internal;
+﻿using Adnc.Infra.Core.System.Extensions.Types;
+using Adnc.Infra.EfCore.MySQL.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
