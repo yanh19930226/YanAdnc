@@ -1,14 +1,12 @@
-﻿using Adnc.Infra.Consul.Consumer;
+﻿using Adnc.Infra.Consul.Discover;
+using Adnc.Infra.Consul.Discover.Handler;
+using Adnc.Infra.Consul.Registration;
 using Adnc.Infra.Consul.TokenGenerator;
 using Adnc.Infra.Core.Adnc.Configuration;
 using Consul;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Adnc.Infra.Consul.Extensions
 {
@@ -22,7 +20,10 @@ namespace Adnc.Infra.Consul.Extensions
             services.AddScoped<ITokenGenerator, DefaultTokenGenerator>();
             services.AddScoped<SimpleDiscoveryDelegatingHandler>();
             services.AddScoped<ConsulDiscoverDelegatingHandler>();
+            services.AddSingleton<ConsulRegistration>();
+
             services.AddSingleton(x => new ConsulClient(x => x.Address = new Uri(consulConfig.ConsulUrl)));
+            services.AddSingleton<IConsulServiceProvider, ConsulServiceProvider>();
             return services;
         }
     }
