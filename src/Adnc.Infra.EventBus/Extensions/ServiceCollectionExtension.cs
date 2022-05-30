@@ -1,4 +1,5 @@
-﻿using Adnc.Infra.EventBus.RabbitMq;
+﻿using Adnc.Infra.EventBus.Cap;
+using Adnc.Infra.EventBus.RabbitMq;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
