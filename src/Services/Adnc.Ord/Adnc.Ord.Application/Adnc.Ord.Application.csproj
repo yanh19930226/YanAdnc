@@ -6,4 +6,19 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Registrar\" />
+    <Folder Include="EventSubscribers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Adnc.Shared\Adnc.Shared.Application\Adnc.Shared.Application.csproj" />
+    <ProjectReference Include="..\Adnc.Ord.Application.Contracts\Adnc.Ord.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Adnc.Ord.Domain\Adnc.Ord.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

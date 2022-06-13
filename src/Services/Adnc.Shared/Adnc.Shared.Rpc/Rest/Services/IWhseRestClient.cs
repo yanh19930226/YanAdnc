@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Adnc.Shared.Rpc.Rest.Services
+{
+    public interface IWhseRestClient : IRestClient
+    {
+        /// <summary>
+        /// <whse服务>获取商品列表
+        /// </summary>
+        /// <returns></returns>
+        [Headers("Authorization: Basic", "Cache: 1000")]
+        [Get("/whse/products")]
+        Task<ApiResponse<List<ProductRto>>> GetProductsAsync(ProductSearchListRto search, CancellationToken cancellationToken = default);
+    }
+}

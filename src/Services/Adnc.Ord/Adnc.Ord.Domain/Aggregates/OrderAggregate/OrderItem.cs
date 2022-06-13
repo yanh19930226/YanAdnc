@@ -1,0 +1,49 @@
+﻿using Adnc.Infra.Core.Adnc.Guard;
+using Adnc.Shared.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Adnc.Ord.Domain.Aggregates.OrderAggregate
+{
+    /// <summary>
+    /// 订单条目
+    /// </summary>
+    public class OrderItem : DomainEntity
+    {
+        /// <summary>
+        /// 订单Id
+        /// </summary>
+        public long OrderId { get; private set; }
+
+        /// <summary>
+        /// 产品
+        /// </summary>
+        public OrderItemProduct Product { get; private set; }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Count { get; private set; }
+
+        private OrderItem()
+        {
+        }
+
+        internal OrderItem(long id, long orderId, OrderItemProduct product, int count)
+        {
+            this.Id = id;
+            this.OrderId = Guard.Checker.GTZero(orderId, nameof(orderId));
+            this.Product = Guard.Checker.NotNull(product, nameof(product));
+            this.Count = Guard.Checker.GTZero(count, nameof(count));
+        }
+
+        internal void ChangeCount(int count)
+        {
+            Guard.Checker.GTZero(count, nameof(count));
+            this.Count += count;
+        }
+    }
+}

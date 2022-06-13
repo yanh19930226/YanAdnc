@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Adnc.Infra.Repository.Entities
 {
-    public interface IFullAuditInfo : IBasicAuditInfo
+    public interface IFullAuditInfo 
     {
         /// <summary>
         /// 最后更新人

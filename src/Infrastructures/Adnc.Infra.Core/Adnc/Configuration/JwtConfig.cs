@@ -22,14 +22,14 @@ namespace Adnc.Infra.Core.Adnc.Configuration
         public string Issuer { get; set; }
 
         /// <summary>
-        /// 时间歪斜，单位秒
-        /// </summary>
-        public int ClockSkew { get; set; }
-
-        /// <summary>
         /// Accessoken受众
         /// </summary>
         public string Audience { get; set; }
+
+        /// <summary>
+        /// 时间歪斜，单位秒
+        /// </summary>
+        public int ClockSkew { get; set; }
 
         /// <summary>
         /// RefreshToken受众

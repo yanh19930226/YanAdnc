@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Consts\PermissionConsts\Permissions.Maint.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Consts\PermissionConsts\Permissions.Maint.cs" />
+  </ItemGroup>
+
 </Project>
