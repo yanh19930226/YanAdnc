@@ -13,7 +13,7 @@ namespace Adnc.Infra.Helper
     /// “传统”方式获取当前HttpContext
     /// https://www.cnblogs.com/artech/p/how-to-get-httpcontext.html
     /// </summary>
-    public static class HttpContextUtility
+    public static class HttpContextHelper
     {
         private static Func<object> _asyncLocalAccessor;
         private static Func<object, object> _holderAccessor;

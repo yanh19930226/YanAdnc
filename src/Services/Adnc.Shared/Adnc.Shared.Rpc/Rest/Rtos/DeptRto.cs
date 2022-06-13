@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Adnc.Shared.Rpc.Rest.Rtos
 {
-    internal class DeptRto
+    public class DeptRto
     {
     }
 }

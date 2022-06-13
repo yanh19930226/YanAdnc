@@ -1,9 +1,11 @@
-﻿using Adnc.Infra.Mapper;
+﻿using Adnc.Infra.Helper;
+using Adnc.Infra.Mapper;
 using Adnc.Shared.Application.Contracts.Interfaces;
 using Adnc.Shared.Application.Contracts.ResultModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
