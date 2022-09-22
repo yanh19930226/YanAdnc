@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Adnc.Shared.Domain.Entities
 {
-    public class AggregateRootWithBasicAuditInfo : AggregateRoot, IBasicAuditInfo
+    public class AggregateRootWithBasicAuditInfo : AggregateRoot, ICreateAuditInfo
     {
         public long CreateBy { get; set; }
         public DateTime CreateTime { get; set; }

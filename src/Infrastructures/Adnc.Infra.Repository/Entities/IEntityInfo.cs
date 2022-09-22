@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Adnc.Infra.Repository.IRepositories.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,13 +10,8 @@ namespace Adnc.Infra.Repository.Entities
 {
     public interface IEntityInfo
     {
-        IEnumerable<EntityTypeInfo> GetEntitiesTypeInfo();
-    }
+        Operater GetOperater();
 
-    public class EntityTypeInfo
-    {
-        public Type? Type { get; set; }
-
-        public IEnumerable<object>? DataSeeding { get; set; }
+        void OnModelCreating(dynamic modelBuilder);
     }
 }
