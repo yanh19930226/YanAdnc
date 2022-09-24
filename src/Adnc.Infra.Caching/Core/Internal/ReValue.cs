@@ -9,14 +9,14 @@ namespace Adnc.Infra.Caching.Core.Internal
     /// <summary>
     /// Cache value.
     /// </summary>
-    public class CacheValue<T>
+    public class ReValue<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Adnc.Infra.Caching.Core.CacheValue`1"/> class.
         /// </summary>
         /// <param name="value">Value.</param>
         /// <param name="hasValue">If set to <c>true</c> has value.</param>
-        public CacheValue(T value, bool hasValue)
+        public ReValue(T value, bool hasValue)
         {
             Value = value;
             HasValue = hasValue;
@@ -44,13 +44,13 @@ namespace Adnc.Infra.Caching.Core.Internal
         /// Gets the null.
         /// </summary>
         /// <value>The null.</value>
-        public static CacheValue<T> Null { get; } = new CacheValue<T>(default(T), true);
+        public static ReValue<T> Null { get; } = new ReValue<T>(default(T), true);
 
         /// <summary>
         /// Gets the no value.
         /// </summary>
         /// <value>The no value.</value>
-        public static CacheValue<T> NoValue { get; } = new CacheValue<T>(default(T), false);
+        public static ReValue<T> NoValue { get; } = new ReValue<T>(default(T), false);
 
         /// <summary>
         ///

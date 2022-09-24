@@ -20,15 +20,14 @@ namespace Adnc.Infra.EventBus.RabbitMq
 
     internal sealed class RabbitMqConnection : IRabbitMqConnection
     {
-        private static volatile RabbitMqConnection? _uniqueInstance;
-        private static readonly object _lockObject = new();
-        private ILogger<dynamic> _logger = default!;
-        public IConnection Connection { get; private set; } = default!;
-
         private RabbitMqConnection()
         {
 
         }
+        private static volatile RabbitMqConnection? _uniqueInstance;
+        private static readonly object _lockObject = new();
+        private ILogger<dynamic> _logger = default!;
+        public IConnection Connection { get; private set; } = default!;
 
         internal static RabbitMqConnection GetInstance(IOptions<RabbitMqConfig> options, string clientProvidedName, ILogger<dynamic> logger)
         {
@@ -45,7 +44,11 @@ namespace Adnc.Infra.EventBus.RabbitMq
             return _uniqueInstance;
         }
 
-        private RabbitMqConnection(IOptions<RabbitMqConfig> options, string clientProvidedName, ILogger<dynamic> logger)
+        private RabbitMqConnection(
+            IOptions<RabbitMqConfig> options, 
+            string clientProvidedName,
+            ILogger<dynamic> logger
+            )
         {
             _logger = logger;
 

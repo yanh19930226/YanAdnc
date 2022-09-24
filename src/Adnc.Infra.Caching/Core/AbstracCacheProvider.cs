@@ -1,8 +1,11 @@
 ﻿using Adnc.Infra.Caching.Configurations;
+using Adnc.Infra.Caching.Core.Diagnostics;
 using Adnc.Infra.Caching.Core.Internal;
 using Adnc.Infra.Caching.Core.Serialization;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,22 +15,15 @@ namespace Adnc.Infra.Caching.Core
     public abstract class AbstracCacheProvider : ICacheProvider
     {
         protected static readonly DiagnosticListener s_diagnosticListener =
-                    new DiagnosticListener(CachingDiagnosticListenerExtensions.DiagnosticListenerName);
-
-        //protected string ProviderName { get; set; }
-        //protected bool IsDistributedProvider { get; set; }
-        //protected int ProviderMaxRdSecond { get; set; }
-        //protected CacheStats ProviderStats { get; set; }
+                    new(CachingDiagnosticListenerExtensions.DiagnosticListenerName);
 
         public abstract string Name { get; }
-        public abstract CacheOptions CacheOptions { get; }
-        //public bool IsDistributedCache => this.IsDistributedProvider;
-        //public int MaxRdSecond => this.ProviderMaxRdSecond;
-        //public CacheStats CacheStats => this.ProviderStats;
+
+        public abstract IOptions<RedisOptions> RedisOptions { get; }
 
         public abstract string CachingProviderType { get; }
 
-        public abstract ICachingSerializer Serializer { get; }
+        public abstract IRedisSerializer Serializer { get; }
 
         protected abstract bool BaseExists(string cacheKey);
 
@@ -37,23 +33,23 @@ namespace Adnc.Infra.Caching.Core
 
         protected abstract Task BaseFlushAsync();
 
-        protected abstract CacheValue<T> BaseGet<T>(string cacheKey, Func<T> dataRetriever, TimeSpan expiration);
+        protected abstract ReValue<T> BaseGet<T>(string cacheKey, Func<T> dataRetriever, TimeSpan expiration);
 
-        protected abstract CacheValue<T> BaseGet<T>(string cacheKey);
+        protected abstract ReValue<T> BaseGet<T>(string cacheKey);
 
-        protected abstract IDictionary<string, CacheValue<T>> BaseGetAll<T>(IEnumerable<string> cacheKeys);
+        protected abstract IDictionary<string, ReValue<T>> BaseGetAll<T>(IEnumerable<string> cacheKeys);
 
-        protected abstract Task<IDictionary<string, CacheValue<T>>> BaseGetAllAsync<T>(IEnumerable<string> cacheKeys);
+        protected abstract Task<IDictionary<string, ReValue<T>>> BaseGetAllAsync<T>(IEnumerable<string> cacheKeys);
 
-        protected abstract Task<CacheValue<T>> BaseGetAsync<T>(string cacheKey, Func<Task<T>> dataRetriever, TimeSpan expiration);
+        protected abstract Task<ReValue<T>> BaseGetAsync<T>(string cacheKey, Func<Task<T>> dataRetriever, TimeSpan expiration);
 
         protected abstract Task<object> BaseGetAsync(string cacheKey, Type type);
 
-        protected abstract Task<CacheValue<T>> BaseGetAsync<T>(string cacheKey);
+        protected abstract Task<ReValue<T>> BaseGetAsync<T>(string cacheKey);
 
-        protected abstract IDictionary<string, CacheValue<T>> BaseGetByPrefix<T>(string prefix);
+        protected abstract IDictionary<string, ReValue<T>> BaseGetByPrefix<T>(string prefix);
 
-        protected abstract Task<IDictionary<string, CacheValue<T>>> BaseGetByPrefixAsync<T>(string prefix);
+        protected abstract Task<IDictionary<string, ReValue<T>>> BaseGetByPrefixAsync<T>(string prefix);
 
         protected abstract int BaseGetCount(string prefix = "");
 
@@ -71,17 +67,17 @@ namespace Adnc.Infra.Caching.Core
 
         protected abstract Task BaseRemoveByPrefixAsync(string prefix);
 
-        protected abstract void BaseSet<T>(string cacheKey, T cacheValue, TimeSpan expiration);
+        protected abstract void BaseSet<T>(string cacheKey, T ReValue, TimeSpan expiration);
 
         protected abstract void BaseSetAll<T>(IDictionary<string, T> values, TimeSpan expiration);
 
         protected abstract Task BaseSetAllAsync<T>(IDictionary<string, T> values, TimeSpan expiration);
 
-        protected abstract Task BaseSetAsync<T>(string cacheKey, T cacheValue, TimeSpan expiration);
+        protected abstract Task BaseSetAsync<T>(string cacheKey, T ReValue, TimeSpan expiration);
 
-        protected abstract bool BaseTrySet<T>(string cacheKey, T cacheValue, TimeSpan expiration);
+        protected abstract bool BaseTrySet<T>(string cacheKey, T ReValue, TimeSpan expiration);
 
-        protected abstract Task<bool> BaseTrySetAsync<T>(string cacheKey, T cacheValue, TimeSpan expiration);
+        protected abstract Task<bool> BaseTrySetAsync<T>(string cacheKey, T ReValue, TimeSpan expiration);
 
         protected abstract TimeSpan BaseGetExpiration(string cacheKey);
 
@@ -194,7 +190,7 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public CacheValue<T> Get<T>(string cacheKey, Func<T> dataRetriever, TimeSpan expiration)
+        public ReValue<T> Get<T>(string cacheKey, Func<T> dataRetriever, TimeSpan expiration)
         {
             var operationId = s_diagnosticListener.WriteGetCacheBefore(new BeforeGetRequestEventData(CachingProviderType.ToString(), Name, nameof(Get), new[] { cacheKey }, expiration));
             Exception e = null;
@@ -220,7 +216,7 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public CacheValue<T> Get<T>(string cacheKey)
+        public ReValue<T> Get<T>(string cacheKey)
         {
             var operationId = s_diagnosticListener.WriteGetCacheBefore(new BeforeGetRequestEventData(CachingProviderType.ToString(), Name, nameof(Get), new[] { cacheKey }));
             Exception e = null;
@@ -246,7 +242,7 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public IDictionary<string, CacheValue<T>> GetAll<T>(IEnumerable<string> cacheKeys)
+        public IDictionary<string, ReValue<T>> GetAll<T>(IEnumerable<string> cacheKeys)
         {
             var operationId = s_diagnosticListener.WriteGetCacheBefore(new BeforeGetRequestEventData(CachingProviderType.ToString(), Name, nameof(GetAll), cacheKeys.ToArray()));
             Exception e = null;
@@ -272,7 +268,7 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public async Task<IDictionary<string, CacheValue<T>>> GetAllAsync<T>(IEnumerable<string> cacheKeys)
+        public async Task<IDictionary<string, ReValue<T>>> GetAllAsync<T>(IEnumerable<string> cacheKeys)
         {
             var operationId = s_diagnosticListener.WriteGetCacheBefore(new BeforeGetRequestEventData(CachingProviderType.ToString(), Name, nameof(GetAllAsync), cacheKeys.ToArray()));
             Exception e = null;
@@ -298,7 +294,7 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public async Task<CacheValue<T>> GetAsync<T>(string cacheKey, Func<Task<T>> dataRetriever, TimeSpan expiration)
+        public async Task<ReValue<T>> GetAsync<T>(string cacheKey, Func<Task<T>> dataRetriever, TimeSpan expiration)
         {
             var operationId = s_diagnosticListener.WriteGetCacheBefore(new BeforeGetRequestEventData(CachingProviderType.ToString(), Name, nameof(GetAsync), new[] { cacheKey }, expiration));
             Exception e = null;
@@ -350,7 +346,7 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public async Task<CacheValue<T>> GetAsync<T>(string cacheKey)
+        public async Task<ReValue<T>> GetAsync<T>(string cacheKey)
         {
             var operationId = s_diagnosticListener.WriteGetCacheBefore(new BeforeGetRequestEventData(CachingProviderType.ToString(), Name, nameof(GetAsync), new[] { cacheKey }));
             Exception e = null;
@@ -376,7 +372,7 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public IDictionary<string, CacheValue<T>> GetByPrefix<T>(string prefix)
+        public IDictionary<string, ReValue<T>> GetByPrefix<T>(string prefix)
         {
             var operationId = s_diagnosticListener.WriteGetCacheBefore(new BeforeGetRequestEventData(CachingProviderType.ToString(), Name, nameof(GetByPrefix), new[] { prefix }));
             Exception e = null;
@@ -402,7 +398,7 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public async Task<IDictionary<string, CacheValue<T>>> GetByPrefixAsync<T>(string prefix)
+        public async Task<IDictionary<string, ReValue<T>>> GetByPrefixAsync<T>(string prefix)
         {
             var operationId = s_diagnosticListener.WriteGetCacheBefore(new BeforeGetRequestEventData(CachingProviderType.ToString(), Name, nameof(GetByPrefixAsync), new[] { prefix }));
             Exception e = null;
@@ -594,13 +590,13 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public void Set<T>(string cacheKey, T cacheValue, TimeSpan expiration)
+        public void Set<T>(string cacheKey, T ReValue, TimeSpan expiration)
         {
-            var operationId = s_diagnosticListener.WriteSetCacheBefore(new BeforeSetRequestEventData(CachingProviderType.ToString(), Name, nameof(Set), new Dictionary<string, object> { { cacheKey, cacheValue } }, expiration));
+            var operationId = s_diagnosticListener.WriteSetCacheBefore(new BeforeSetRequestEventData(CachingProviderType.ToString(), Name, nameof(Set), new Dictionary<string, object> { { cacheKey, ReValue } }, expiration));
             Exception e = null;
             try
             {
-                BaseSet(cacheKey, cacheValue, expiration);
+                BaseSet(cacheKey, ReValue, expiration);
             }
             catch (Exception ex)
             {
@@ -672,13 +668,13 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public async Task SetAsync<T>(string cacheKey, T cacheValue, TimeSpan expiration)
+        public async Task SetAsync<T>(string cacheKey, T ReValue, TimeSpan expiration)
         {
-            var operationId = s_diagnosticListener.WriteSetCacheBefore(new BeforeSetRequestEventData(CachingProviderType.ToString(), Name, nameof(SetAsync), new Dictionary<string, object> { { cacheKey, cacheValue } }, expiration));
+            var operationId = s_diagnosticListener.WriteSetCacheBefore(new BeforeSetRequestEventData(CachingProviderType.ToString(), Name, nameof(SetAsync), new Dictionary<string, object> { { cacheKey, ReValue } }, expiration));
             Exception e = null;
             try
             {
-                await BaseSetAsync(cacheKey, cacheValue, expiration);
+                await BaseSetAsync(cacheKey, ReValue, expiration);
             }
             catch (Exception ex)
             {
@@ -698,13 +694,13 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public bool TrySet<T>(string cacheKey, T cacheValue, TimeSpan expiration)
+        public bool TrySet<T>(string cacheKey, T ReValue, TimeSpan expiration)
         {
-            var operationId = s_diagnosticListener.WriteSetCacheBefore(new BeforeSetRequestEventData(CachingProviderType.ToString(), Name, nameof(TrySet), new Dictionary<string, object> { { cacheKey, cacheValue } }, expiration));
+            var operationId = s_diagnosticListener.WriteSetCacheBefore(new BeforeSetRequestEventData(CachingProviderType.ToString(), Name, nameof(TrySet), new Dictionary<string, object> { { cacheKey, ReValue } }, expiration));
             Exception e = null;
             try
             {
-                return BaseTrySet(cacheKey, cacheValue, expiration);
+                return BaseTrySet(cacheKey, ReValue, expiration);
             }
             catch (Exception ex)
             {
@@ -724,13 +720,13 @@ namespace Adnc.Infra.Caching.Core
             }
         }
 
-        public async Task<bool> TrySetAsync<T>(string cacheKey, T cacheValue, TimeSpan expiration)
+        public async Task<bool> TrySetAsync<T>(string cacheKey, T ReValue, TimeSpan expiration)
         {
-            var operationId = s_diagnosticListener.WriteSetCacheBefore(new BeforeSetRequestEventData(CachingProviderType.ToString(), Name, nameof(TrySetAsync), new Dictionary<string, object> { { cacheKey, cacheValue } }, expiration));
+            var operationId = s_diagnosticListener.WriteSetCacheBefore(new BeforeSetRequestEventData(CachingProviderType.ToString(), Name, nameof(TrySetAsync), new Dictionary<string, object> { { cacheKey, ReValue } }, expiration));
             Exception e = null;
             try
             {
-                return await BaseTrySetAsync(cacheKey, cacheValue, expiration);
+                return await BaseTrySetAsync(cacheKey, ReValue, expiration);
             }
             catch (Exception ex)
             {

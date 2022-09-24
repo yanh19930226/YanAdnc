@@ -1,4 +1,7 @@
-﻿using Adnc.Infra.Caching.Core.Internal;
+﻿using Adnc.Infra.Caching.Configurations;
+using Adnc.Infra.Caching.Core.Internal;
+using Adnc.Infra.Caching.Core.Serialization;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,31 +18,31 @@ namespace Adnc.Infra.Caching
         /// <value>The name.</value>
         string Name { get; }
 
-        CacheOptions CacheOptions { get; }
+        IOptions<RedisOptions> RedisOptions { get; }
 
         /// <summary>
         /// The serializer.
         /// </summary>
-        ICachingSerializer Serializer { get; }
+        IRedisSerializer Serializer { get; }
 
         /// <summary>
-        /// Set the specified cacheKey, cacheValue and expiration.
+        /// Set the specified cacheKey, ReValue and expiration.
         /// </summary>
         /// <param name="cacheKey">Cache key.</param>
-        /// <param name="cacheValue">Cache value.</param>
+        /// <param name="ReValue">Cache value.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        void Set<T>(string cacheKey, T cacheValue, TimeSpan expiration);
+        void Set<T>(string cacheKey, T ReValue, TimeSpan expiration);
 
         /// <summary>
-        /// Sets the specified cacheKey, cacheValue and expiration async.
+        /// Sets the specified cacheKey, ReValue and expiration async.
         /// </summary>
         /// <returns>The async.</returns>
         /// <param name="cacheKey">Cache key.</param>
-        /// <param name="cacheValue">Cache value.</param>
+        /// <param name="ReValue">Cache value.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        Task SetAsync<T>(string cacheKey, T cacheValue, TimeSpan expiration);
+        Task SetAsync<T>(string cacheKey, T ReValue, TimeSpan expiration);
 
         /// <summary>
         /// Get the specified cacheKey.
@@ -47,7 +50,7 @@ namespace Adnc.Infra.Caching
         /// <returns>The get.</returns>
         /// <param name="cacheKey">Cache key.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        CacheValue<T> Get<T>(string cacheKey);
+        ReValue<T> Get<T>(string cacheKey);
 
         /// <summary>
         /// Get the specified cacheKey async.
@@ -55,7 +58,7 @@ namespace Adnc.Infra.Caching
         /// <returns>The async.</returns>
         /// <param name="cacheKey">Cache key.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        Task<CacheValue<T>> GetAsync<T>(string cacheKey);
+        Task<ReValue<T>> GetAsync<T>(string cacheKey);
 
         /// <summary>
         /// Remove the specified cacheKey.
@@ -89,20 +92,20 @@ namespace Adnc.Infra.Caching
         /// </summary>
         /// <returns><c>true</c>, if set was tryed, <c>false</c> otherwise.</returns>
         /// <param name="cacheKey">Cache key.</param>
-        /// <param name="cacheValue">Cache value.</param>
+        /// <param name="ReValue">Cache value.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        bool TrySet<T>(string cacheKey, T cacheValue, TimeSpan expiration);
+        bool TrySet<T>(string cacheKey, T ReValue, TimeSpan expiration);
 
         /// <summary>
         /// Tries the set async.
         /// </summary>
         /// <returns>The set async.</returns>
         /// <param name="cacheKey">Cache key.</param>
-        /// <param name="cacheValue">Cache value.</param>
+        /// <param name="ReValue">Cache value.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        Task<bool> TrySetAsync<T>(string cacheKey, T cacheValue, TimeSpan expiration);
+        Task<bool> TrySetAsync<T>(string cacheKey, T ReValue, TimeSpan expiration);
 
         /// <summary>
         /// Sets all.
@@ -142,7 +145,7 @@ namespace Adnc.Infra.Caching
         /// <param name="dataRetriever">Data retriever.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        CacheValue<T> Get<T>(string cacheKey, Func<T> dataRetriever, TimeSpan expiration);
+        ReValue<T> Get<T>(string cacheKey, Func<T> dataRetriever, TimeSpan expiration);
 
         /// <summary>
         /// Gets the specified cacheKey, dataRetriever and expiration async.
@@ -152,7 +155,7 @@ namespace Adnc.Infra.Caching
         /// <param name="dataRetriever">Data retriever.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        Task<CacheValue<T>> GetAsync<T>(string cacheKey, Func<Task<T>> dataRetriever, TimeSpan expiration);
+        Task<ReValue<T>> GetAsync<T>(string cacheKey, Func<Task<T>> dataRetriever, TimeSpan expiration);
 
         /// <summary>
         /// Removes cached item by cachekey's prefix.

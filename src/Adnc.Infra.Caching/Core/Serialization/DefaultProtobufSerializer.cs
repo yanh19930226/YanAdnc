@@ -1,23 +1,20 @@
 ﻿using Adnc.Infra.Caching.Core.Internal;
 using ProtoBuf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Adnc.Infra.Caching.Core.Serialization
 {
     /// <summary>
     /// Default protobuf serializer.
     /// </summary>
-    public class DefaultProtobufSerializer : ICachingSerializer
+    public class DefaultProtobufSerializer : IRedisSerializer
     {
         /// <summary>
         /// Gets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name => CachingConstValue.DefaultProtobufSerializerName;
+        public string Name => RedisConstValue.Serializer.DefaultProtobufSerializerName;
 
         /// <summary>
         /// Deserialize the specified bytes.

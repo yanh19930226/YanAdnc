@@ -9,9 +9,9 @@ namespace Adnc.Infra.Caching.Configurations
     /// <summary>
     /// redis options.
     /// </summary>
-    public sealed class CacheOptions
+    public sealed class RedisOptions
     {
-        public CacheOptions()
+        public RedisOptions()
         {
         }
 
@@ -32,6 +32,12 @@ namespace Adnc.Infra.Caching.Configurations
         /// </summary>
         /// <value><c>true</c> if enable logging; otherwise, <c>false</c>.</value>
         public bool EnableLogging { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether enable bloomfilter.
+        /// </summary>
+        /// <value><c>true</c> if enable bloomfilter; otherwise, <c>false</c>.</value>
+        public bool EnableBloomFilter { get; set; }
 
         /// <summary>
         /// Gets or sets the sleep ms.

@@ -27,24 +27,24 @@ namespace Adnc.Infra.EventBus.RabbitMq
         /// <typeparam name="TMessage"></typeparam>
         /// <param name="queueName"></param>
         /// <param name="message"></param>
-        //public virtual void BasicPublish<TMessage>(string queueName, TMessage message)
-        //{
-        //    _logger.LogInformation($"PushMessage,queueName:{queueName}");
+        public virtual void BasicPublish<TMessage>(string queueName, TMessage message)
+        {
+            _logger.LogInformation($"PushMessage,queueName:{queueName}");
 
-        //    _channel.QueueDeclare(queue: queueName,
-        //                          durable: false,
-        //                          exclusive: false,
-        //                          autoDelete: false,
-        //                          arguments: null);
+            _channel.QueueDeclare(queue: queueName,
+                                  durable: false,
+                                  exclusive: false,
+                                  autoDelete: false,
+                                  arguments: null);
 
-        //    var content = JsonSerializer.Serialize(message);
-        //    var body = Encoding.UTF8.GetBytes(content);
+            var content = JsonSerializer.Serialize(message);
+            var body = Encoding.UTF8.GetBytes(content);
 
-        //    _channel.BasicPublish(exchange: string.Empty,
-        //                          routingKey: queueName,
-        //                          basicProperties: null,
-        //                          body: body);
-        //}
+            _channel.BasicPublish(exchange: string.Empty,
+                                  routingKey: queueName,
+                                  basicProperties: null,
+                                  body: body);
+        }
 
         public virtual void BasicPublish<TMessage>(string exchange
             , string routingKey

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Adnc.Infra.Caching.Core.Serialization
 {
     /// <summary>
-    /// Easy caching serializer.
+    /// caching serializer.
     /// </summary>
-    public interface ICachingSerializer
+    public interface IRedisSerializer
     {
         /// <summary>
         /// Gets the name.
