@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Adnc.Shared.Rpc.Rest.Rtos;
 
-namespace Adnc.Shared.Rpc.Rest.Rtos
+public class LoginRto
 {
-    public class LoginRto
-    {
-    }
+    /// <summary>
+    /// 构造函数
+    /// 修复Warning, add by garfield 20220530
+    /// </summary>
+    public LoginRto(string token, string refreshToken) => (Token, RefreshToken) = (token, refreshToken);
+
+    public string Token { get; set; }
+
+    public string RefreshToken { get; set; }
 }

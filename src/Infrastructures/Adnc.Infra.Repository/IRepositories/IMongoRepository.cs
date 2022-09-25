@@ -1,4 +1,4 @@
-﻿using Adnc.Infra.Repository.Entities.MongoEntities;
+﻿using Adnc.Infra.Repository.Entities;
 using Adnc.Infra.Repository.IRepositories.Models;
 using MongoDB.Driver;
 using System;

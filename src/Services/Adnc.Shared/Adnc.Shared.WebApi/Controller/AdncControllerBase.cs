@@ -1,5 +1,6 @@
 ﻿using Adnc.Shared.Application.Contracts.ResultModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Mvc;
 
 namespace Adnc.Shared.WebApi.Controller
 {

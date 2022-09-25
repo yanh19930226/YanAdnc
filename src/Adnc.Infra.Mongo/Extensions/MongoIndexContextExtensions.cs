@@ -1,6 +1,6 @@
 ﻿using Adnc.Infra.Mongo.Configuration;
 using Adnc.Infra.Mongo.Entities;
-using Adnc.Infra.Repository.Entities.MongoEntities;
+using Adnc.Infra.Repository.Entities;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Adnc.Shared.Events
+﻿namespace Adnc.Shared.Events
 {
     [Serializable]
     public class EventEntity<TData> where TData : class
     {
         public EventEntity()
         {
+            this.Id = default;
+            this.Data = default!;
+            this.OccurredDate = DateTime.Now;
+            this.EventSource = string.Empty;
+            this.EventTarget = string.Empty;
         }
 
         public EventEntity(long id, TData data, string source)
@@ -19,6 +18,7 @@ namespace Adnc.Shared.Events
             this.Data = data;
             this.OccurredDate = DateTime.Now;
             this.EventSource = source;
+            this.EventTarget = string.Empty;
         }
 
         /// <summary>
@@ -32,9 +32,14 @@ namespace Adnc.Shared.Events
         public virtual DateTime OccurredDate { get; set; }
 
         /// <summary>
-        /// 触发事件的对象
+        /// 触发事件的方法
         /// </summary>
         public virtual string EventSource { get; set; }
+
+        /// <summary>
+        /// 处理事件的方法
+        /// </summary>
+        public virtual string EventTarget { get; set; }
 
         /// <summary>
         /// 事件数据

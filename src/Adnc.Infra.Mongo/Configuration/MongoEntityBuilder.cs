@@ -1,4 +1,4 @@
-﻿using Adnc.Infra.Repository.Entities.MongoEntities;
+﻿using Adnc.Infra.Repository.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

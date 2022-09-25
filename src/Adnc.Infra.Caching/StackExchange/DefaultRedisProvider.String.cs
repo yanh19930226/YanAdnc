@@ -1,4 +1,5 @@
 ﻿using Adnc.Infra.Caching.Core.Internal;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace Adnc.Infra.Caching.StackExchange
                 w = When.Exists;
             }
 
-            bool flag = _redisDb.StringSet(cacheKey, cacheValue, expiration, w);
+            bool flag = _redisDb.StringSet(cacheKey, cacheValue, expiration, When.NotExists, CommandFlags.None);
             return flag;
         }
 
@@ -78,7 +79,7 @@ namespace Adnc.Infra.Caching.StackExchange
                 w = When.Exists;
             }
 
-            bool flag = await _redisDb.StringSetAsync(cacheKey, cacheValue, expiration, w);
+            bool flag = await _redisDb.StringSetAsync(cacheKey, cacheValue, expiration, When.NotExists,CommandFlags.None);
             return flag;
         }
 

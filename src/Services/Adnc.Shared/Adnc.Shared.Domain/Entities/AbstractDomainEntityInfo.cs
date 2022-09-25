@@ -1,4 +1,4 @@
-﻿using Adnc.Infra.Repository.Entities.EfEnities;
+﻿using Adnc.Shared.Repository.EfEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +8,22 @@ using System.Threading.Tasks;
 
 namespace Adnc.Shared.Domain.Entities
 {
-    public abstract class AbstractDomainEntityInfo : AbstractEntityInfo
+    public abstract class AbstractDomainEntityInfo : AbstracSharedEntityInfo
     {
+        protected AbstractDomainEntityInfo(UserContext userContext) : base(userContext)
+        {
+        }
+
         protected override IEnumerable<Type> GetEntityTypes(Assembly assembly)
         {
-            var efEntities = assembly.GetTypes().Where(m =>
+            var typeList = assembly.GetTypes().Where(m =>
                                                        m.FullName != null
                                                        && (typeof(AggregateRoot).IsAssignableFrom(m) || typeof(DomainEntity).IsAssignableFrom(m))
-                                                       && !m.IsAbstract).ToArray();
+                                                       && !m.IsAbstract);
+            if (typeList is null)
+                typeList = new List<Type>();
 
-            return efEntities;
+            return typeList.Append(typeof(EventTracker));
         }
     }
 }
