@@ -39,8 +39,7 @@ public static class JwtTokenHelper
         new()
         {
             //接受到消息时调用
-            OnMessageReceived = context => Task.CompletedTask
-                ,
+            OnMessageReceived = context => Task.CompletedTask,
             //在Token验证通过后调用
             OnTokenValidated = context =>
             {
@@ -51,8 +50,7 @@ public static class JwtTokenHelper
                 userContext.Name = claims.First(x => x.Type == JwtRegisteredClaimNames.Name).Value;
                 userContext.RemoteIpAddress = context.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
                 return Task.CompletedTask;
-            }
-                 ,
+            },
             //认证失败时调用
             OnAuthenticationFailed = context =>
             {
@@ -60,8 +58,7 @@ public static class JwtTokenHelper
                 if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                     context.Response.Headers.Add("act", "expired");
                 return Task.CompletedTask;
-            }
-                ,
+            },
             //未授权时调用
             OnChallenge = context => Task.CompletedTask
         };

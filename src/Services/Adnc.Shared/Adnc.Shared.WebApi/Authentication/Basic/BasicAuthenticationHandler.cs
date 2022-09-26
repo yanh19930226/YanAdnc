@@ -1,7 +1,15 @@
-﻿using System;
+﻿using Adnc.Infra.Core.System.Extensions.String;
+using Adnc.Shared.Rpc.Handlers.Token;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace Adnc.Shared.WebApi.Authentication.Basic

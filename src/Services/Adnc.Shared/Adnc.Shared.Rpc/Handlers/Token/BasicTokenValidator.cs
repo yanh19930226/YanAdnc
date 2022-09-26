@@ -3,6 +3,7 @@ using Adnc.Infra.Core.System.Extensions.DataTimes;
 using Adnc.Infra.Core.System.Extensions.String;
 using Adnc.Infra.Helper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Adnc.Shared.Rpc.Rest.Rtos;
+using Refit;
+using System.Threading.Tasks;
 
 namespace Adnc.Shared.Rpc.Rest.Services
 {
@@ -8,7 +10,15 @@ namespace Adnc.Shared.Rpc.Rest.Services
         ///  登录
         /// </summary>
         /// <returns></returns>
-        [Post("/usr/session")]
+        [Post("/auth/session")]
         Task<ApiResponse<LoginRto>> LoginAsync(LoginInputRto loginRequest);
+
+        /// <summary>
+        ///  获取认证信息
+        /// </summary>
+        /// <returns></returns>
+        [Get("/auth/session")]
+        [Headers("Authorization: Basic", "Cache: 10000")]
+        Task<ApiResponse<UserValidatedInfoRto>> GetValidatedInfoAsync();
     }
 }
