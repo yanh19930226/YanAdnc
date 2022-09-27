@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Adnc.Shared.WebApi.Authorization;
 
-namespace Adnc.Shared.WebApi.Authorize
+public static class AuthorizePolicy
 {
-    public static class AuthorizePolicy
-    {
-        public const string Default = "default";
-    }
+    public static readonly string Default = "default";
 }

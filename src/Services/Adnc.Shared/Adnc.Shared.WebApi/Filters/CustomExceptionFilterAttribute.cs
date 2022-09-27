@@ -1,7 +1,10 @@
 ﻿using Adnc.Infra.Core.Adnc.Exceptions;
 using Adnc.Shared;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Web.Mvc;
 
 namespace Microsoft.AspNetCore.Mvc.Filters;
 

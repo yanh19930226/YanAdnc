@@ -1,4 +1,11 @@
-﻿using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
+﻿using Adnc.Infra.Core.Adnc.Json;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
 namespace Adnc.Shared.WebApi.Middleware;
 
@@ -42,12 +49,9 @@ public class CustomExceptionHandlerMiddleware
 
         var problemDetails = new ProblemDetails
         {
-            Title = title
-            ,
-            Detail = detial
-            ,
-            Type = type
-            ,
+            Title = title,
+            Detail = detial,
+            Type = type,
             Status = status
         };
 

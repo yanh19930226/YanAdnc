@@ -1,6 +1,5 @@
 ﻿using Adnc.Shared.Application.Contracts.ResultModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Mvc;
 
 namespace Adnc.Shared.WebApi.Controller
 {
@@ -12,7 +11,7 @@ namespace Adnc.Shared.WebApi.Controller
         /// <param name="problemDetails"><see cref="Adnc.Shared.Application.Services.ProblemDetails"/></param>
         /// <returns><see cref="ObjectResult"/></returns>
         [NonAction]
-        protected virtual ObjectResult Problem(Adnc.Shared.Application.Contracts.ResultModels.ProblemDetails problemDetails)
+        protected virtual ObjectResult Problem(Application.Contracts.ResultModels.ProblemDetails problemDetails)
         {
             problemDetails.Instance ??= this.Request.Path.ToString();
             return Problem(problemDetails.Detail

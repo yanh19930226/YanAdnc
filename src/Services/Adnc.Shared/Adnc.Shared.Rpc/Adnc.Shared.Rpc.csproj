@@ -4,4 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="6.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Infrastructures\Adnc.Infra.Core\Adnc.Infra.Core.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructures\Adnc.Infra.Helper\Adnc.Infra.Helper.csproj" />
+  </ItemGroup>
+
 </Project>

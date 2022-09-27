@@ -1,20 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Adnc.Shared.WebApi.Authorize
+namespace Adnc.Shared.WebApi.Authorization;
+
+public class PermissionRequirement : IAuthorizationRequirement
 {
-    public class PermissionRequirement : IAuthorizationRequirement
+    public string Name { get; init; }
+
+    public PermissionRequirement()
     {
-        public string Name { get; private set; }
-
-        public PermissionRequirement()
-        {
-        }
-
-        public PermissionRequirement(string name) => Name = name;
     }
+
+    public PermissionRequirement(string name) => Name = name;
 }

@@ -1,4 +1,10 @@
-﻿namespace Adnc.Shared.WebApi.Middleware;
+﻿using Adnc.Infra.Core.System.Extensions.String;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System.Net;
+
+namespace Adnc.Shared.WebApi.Middleware;
 
 public class RealIpMiddleware
 {
