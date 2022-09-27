@@ -1,7 +1,7 @@
 ﻿using Adnc.Infra.Core.Adnc.Interfaces;
 using Adnc.Infra.Core.Microsoft.DependencyInjection;
 using Adnc.Shared.WebApi.Authentication;
-using Adnc.Shared.WebApi.Authorize;
+using Adnc.Shared.WebApi.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -52,8 +52,8 @@ namespace Adnc.Shared.WebApi.Registrar
             where TAuthorizationHandler : AbstractPermissionHandler
         {
             Services
-                .AddHttpContextAccessor()
-                .AddMemoryCache();
+            .AddHttpContextAccessor()
+            .AddMemoryCache();
             Configure();
             AddControllers();
             AddAuthentication<TAuthenticationProcessor>();
