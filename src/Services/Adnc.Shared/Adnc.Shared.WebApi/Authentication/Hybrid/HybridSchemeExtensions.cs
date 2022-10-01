@@ -1,5 +1,7 @@
 ﻿using Adnc.Shared.WebApi.Authentication.Hybrid;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

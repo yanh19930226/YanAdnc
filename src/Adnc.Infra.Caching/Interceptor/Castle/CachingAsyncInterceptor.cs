@@ -104,10 +104,10 @@ namespace Adnc.Infra.Caching.Interceptor.Castle
 
                 try
                 {
-                    var cacheValue = _cacheProvider.GetAsync(cacheKey, methodInfo.ReturnType).GetAwaiter().GetResult();
+                    var ReValue = _cacheProvider.GetAsync(cacheKey, methodInfo.ReturnType).GetAwaiter().GetResult();
                     if (cacheKey != null)
                     {
-                        invocation.ReturnValue = cacheValue;
+                        invocation.ReturnValue = ReValue;
                     }
                     else
                     {
@@ -215,10 +215,10 @@ namespace Adnc.Infra.Caching.Interceptor.Castle
                      ;
                 try
                 {
-                    var cacheValue = _cacheProvider.Get<TResult>(cacheKey);
-                    if (cacheValue.HasValue)
+                    var ReValue = _cacheProvider.Get<TResult>(cacheKey);
+                    if (ReValue.HasValue)
                     {
-                        result = cacheValue.Value;
+                        result = ReValue.Value;
                     }
                     else
                     {

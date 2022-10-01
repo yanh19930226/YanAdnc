@@ -22,9 +22,7 @@ namespace Adnc.Infra.EventBus.Extensions
                 .AddSingleton<IEventPublisher, CapPublisher>()
                 .AddScoped<TSubscriber>()
                 .AddCap(setupAction)
-                .AddSubscribeFilter<DefaultCapFilter>()
-
-                ;
+                .AddSubscribeFilter<DefaultCapFilter>();
             return services;
         }
 

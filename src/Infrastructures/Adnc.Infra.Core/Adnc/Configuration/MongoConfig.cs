@@ -8,6 +8,8 @@ namespace Adnc.Infra.Core.Adnc.Configuration
 {
     public class MongoConfig
     {
+
+        public const string Name = "MongoDb";
         /// <summary>
         /// Gets or sets the MongoDB connection string.
         /// </summary>

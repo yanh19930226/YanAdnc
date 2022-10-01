@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Adnc.Shared.Application.Contracts.Dtos.Searchs
 {
-    public abstract class SearchDto : ISearchDto, IDto
+    public abstract class SearchDto : ISearchDto
     {
     }
 }

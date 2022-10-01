@@ -1,5 +1,6 @@
 ﻿namespace Adnc.Shared.Consts.RegistrationCenter;
 
+
 public static class RegisteredTypeConsts
 {
     public const string Direct = "direct";
@@ -7,3 +8,21 @@ public static class RegisteredTypeConsts
     public const string Nacos = "nacos";
     public const string ClusterIP = "clusterip";
 }
+
+
+//public enum RegisteredTypeConsts
+//{
+//    Direct,
+//    Consul,
+//    Nacos,
+//    ClusterIP
+//}
+//public enum RegisteredTypeEnum
+//{
+//    Direct,
+//    Consul,
+//    Nacos,
+//    ClusterIP
+//}
+
+

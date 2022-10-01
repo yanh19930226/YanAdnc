@@ -67,6 +67,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adnc.Shared.Repository", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adnc.Usr", "Adnc.Usr", "{0A92CE9C-4839-411A-A1B0-82955A712174}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adnc.Usr.WebApi", "src\Services\Adnc.Usr\Adnc.Usr.WebApi\Adnc.Usr.WebApi.csproj", "{B6ADAC3E-4183-4F14-93BB-40A6A9102561}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +167,10 @@ Global
 		{9119AAF7-900F-41BE-A728-6FECE9A99673}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9119AAF7-900F-41BE-A728-6FECE9A99673}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9119AAF7-900F-41BE-A728-6FECE9A99673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6ADAC3E-4183-4F14-93BB-40A6A9102561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6ADAC3E-4183-4F14-93BB-40A6A9102561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6ADAC3E-4183-4F14-93BB-40A6A9102561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6ADAC3E-4183-4F14-93BB-40A6A9102561}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +206,7 @@ Global
 		{B56D6D0C-5275-43C9-A3FC-161F9EAF075D} = {7AD00729-8BB2-4CD6-87A7-61D1E59336F8}
 		{9119AAF7-900F-41BE-A728-6FECE9A99673} = {651585A5-08AE-4B7D-B3C1-19CB9DFB7A98}
 		{0A92CE9C-4839-411A-A1B0-82955A712174} = {A14ED93F-EFE1-41A7-AEB2-9DA83E5456CB}
+		{B6ADAC3E-4183-4F14-93BB-40A6A9102561} = {0A92CE9C-4839-411A-A1B0-82955A712174}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C20D7740-16F3-42CF-8A90-B0F7CDD388AC}

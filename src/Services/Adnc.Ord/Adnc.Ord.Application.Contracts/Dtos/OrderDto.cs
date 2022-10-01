@@ -10,7 +10,7 @@ namespace Adnc.Ord.Application.Contracts.Dtos
     /// <summary>
     /// 订单输出Dto
     /// </summary>
-    public class OrderDto : OutputBaseAuditDto
+    public class OrderDto : OutputCreateAuditDto
     {
         /// <summary>
         /// 客户Id

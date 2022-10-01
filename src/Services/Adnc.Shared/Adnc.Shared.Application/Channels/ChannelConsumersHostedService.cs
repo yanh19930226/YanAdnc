@@ -1,64 +1,94 @@
-﻿using Adnc.Infra.Helper;
-using Adnc.Infra.Repository.Entities.MongoEntities;
-using Adnc.Infra.Repository.IRepositories;
+﻿using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Repository.MongoEntities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Adnc.Shared.Application.Channels
+namespace Adnc.Shared.Application.Channels;
+
+public class ChannelConsumersHostedService : BackgroundService
 {
-    public class ChannelConsumersHostedService : BackgroundService
+    private readonly IServiceProvider _services;
+    private readonly ILogger<ChannelConsumersHostedService> _logger;
+
+    public ChannelConsumersHostedService(
+       ILogger<ChannelConsumersHostedService> logger,
+       IServiceProvider services)
     {
-        private readonly IServiceProvider _services;
-        private readonly ILogger<ChannelConsumersHostedService> _logger;
+        _services = services; 
+        _logger = logger;
+    }
 
-        public ChannelConsumersHostedService(ILogger<ChannelConsumersHostedService> logger
-            , IServiceProvider services)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        //save loginlogs
+        _ = Task.Factory.StartNew(async () =>
         {
-            _services = services;
-            _logger = logger;
-        }
+            using var scope = _services.CreateScope();
+            var repository = scope.ServiceProvider.GetRequiredService<IMongoRepository<LoginLog>>();
+            var channelLoginReader = ChannelHelper<LoginLog>.Instance.Reader;
+            var entities = new List<LoginLog>();
+            while (await channelLoginReader.WaitToReadAsync(stoppingToken))
+            {
+                var maxAllowInsert = 100;
+                var currentExistsCount = channelLoginReader.Count;
+                for (int index = 1; index <= currentExistsCount; index++)
+                {
+                    var entity = await channelLoginReader.ReadAsync();
+                    entities.Add(entity);
+                    if (index % maxAllowInsert == 0 || index == currentExistsCount)
+                    {
+                        try
+                        {
+                            await repository.AddManyAsync(entities);
+                            entities.Clear();
+                        }
+                        catch (Exception ex)
+                        {
+                            var message = $"{nameof(ExecuteAsync)}:{nameof(channelLoginReader)}";
+                            _logger.LogError(ex, message);
+                        }
+                    }
+                }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+                if (stoppingToken.IsCancellationRequested) break;
+            }
+        }, stoppingToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+
+        //save operationlogs
+        _ = Task.Factory.StartNew(async () =>
         {
-            //save loginlogs
-            _ = Task.Run(async () =>
+            using var scope = _services.CreateScope();
+            var repository = scope.ServiceProvider.GetRequiredService<IMongoRepository<OperationLog>>();
+            var channelOperationLogReader = ChannelHelper<OperationLog>.Instance.Reader;
+            var entities = new List<OperationLog>();
+            while (await channelOperationLogReader.WaitToReadAsync())
             {
-                var channelLoginReader = ChannelHelper<LoginLog>.Instance.Reader;
-                while (await channelLoginReader.WaitToReadAsync(stoppingToken))
+                var maxAllowInsert = 100;
+                var currentExistsCount = channelOperationLogReader.Count;
+                for (int index = 1; index <= currentExistsCount; index++)
                 {
-                    if (channelLoginReader.TryRead(out var entity))
+                    var entity = await channelOperationLogReader.ReadAsync();
+                    entities.Add(entity);
+                    if (index % maxAllowInsert == 0 || index == currentExistsCount)
                     {
-                        using var scope = _services.CreateScope();
-                        var repository = scope.ServiceProvider.GetRequiredService<IMongoRepository<LoginLog>>();
-                        await repository.AddAsync(entity, stoppingToken);
+                        try
+                        {
+                            await repository.AddManyAsync(entities);
+                            entities.Clear();
+                        }
+                        catch (Exception ex)
+                        {
+                            var message = $"{nameof(ExecuteAsync)}:{nameof(channelOperationLogReader)}";
+                            _logger.LogError(ex, message);
+                        }
                     }
-                    if (stoppingToken.IsCancellationRequested) break;
                 }
-            }, stoppingToken);
 
-            //save operationlogs
-            _ = Task.Run(async () =>
-            {
-                var channelOperationLogReader = ChannelHelper<OperationLog>.Instance.Reader;
-                while (await channelOperationLogReader.WaitToReadAsync(stoppingToken))
-                {
-                    if (channelOperationLogReader.TryRead(out var entity))
-                    {
-                        using var scope = _services.CreateScope();
-                        var repository = scope.ServiceProvider.GetRequiredService<IMongoRepository<OperationLog>>();
-                        await repository.AddAsync(entity, stoppingToken);
-                    }
-                    if (stoppingToken.IsCancellationRequested) break;
-                }
-            }, stoppingToken);
+                if (stoppingToken.IsCancellationRequested) break;
+            }
+        }, stoppingToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
-            await Task.CompletedTask;
-        }
+        await Task.CompletedTask;
     }
 }

@@ -11,6 +11,7 @@ namespace Adnc.Infra.Core.Adnc.Configuration
     /// </summary>
     public class MysqlConfig
     {
+        public const string Name = "Mysql";
         public string ConnectionString { get; set; }
     }
 }

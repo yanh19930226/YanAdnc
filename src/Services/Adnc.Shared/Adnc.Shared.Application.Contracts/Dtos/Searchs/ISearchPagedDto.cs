@@ -9,7 +9,7 @@ namespace Adnc.Shared.Application.Contracts.Dtos.Searchs
     /// <summary>
     /// 查询条件基类
     /// </summary>
-    public interface ISearchPagedDto : IDto
+    public interface ISearchPagedDto : ISearchDto
     {
         /// <summary>
         /// 页码

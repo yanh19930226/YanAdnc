@@ -1,191 +1,186 @@
-﻿using Adnc.Shared.Application.Contracts.Attributes;
+﻿using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Application.Contracts.Attributes;
 using Castle.DynamicProxy;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Adnc.Shared.Application.Interceptors.UnitOfWork
+namespace Adnc.Shared.Application.Interceptors;
+
+/// <summary>
+/// 工作单元拦截器
+/// </summary>
+public class UowAsyncInterceptor : IAsyncInterceptor
 {
+    private readonly IUnitOfWork _unitOfWork;
+
+    public UowAsyncInterceptor(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+
     /// <summary>
-    /// 工作单元拦截器
+    /// 同步拦截器
     /// </summary>
-    public class UowAsyncInterceptor : IAsyncInterceptor
+    /// <param name="invocation"></param>
+    public void InterceptSynchronous(IInvocation invocation)
     {
-        private readonly IUnitOfWork _unitOfWork;
+        var attribute = GetAttribute(invocation);
 
-        public UowAsyncInterceptor(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        if (attribute == null)
+            invocation.Proceed();
+        else
+            InternalInterceptSynchronous(invocation, attribute);
+    }
 
-        /// <summary>
-        /// 同步拦截器
-        /// </summary>
-        /// <param name="invocation"></param>
-        public void InterceptSynchronous(IInvocation invocation)
+    /// <summary>
+    /// 异步拦截器 无返回值
+    /// </summary>
+    /// <param name="invocation"></param>
+    public void InterceptAsynchronous(IInvocation invocation)
+    {
+        var attribute = GetAttribute(invocation);
+
+        invocation.ReturnValue = (attribute is null)
+                                                    ? InternalInterceptAsynchronousWithoutUow(invocation)
+                                                    : InternalInterceptAsynchronous(invocation, attribute)
+                                                    ;
+    }
+
+    /// <summary>
+    /// 异步拦截器 有返回值
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="invocation"></param>
+    public void InterceptAsynchronous<TResult>(IInvocation invocation)
+    {
+        var attribute = GetAttribute(invocation);
+
+        invocation.ReturnValue = (attribute is null)
+                                                    ? InternalInterceptAsynchronousWithoutUow<TResult>(invocation)
+                                                    : InternalInterceptAsynchronous<TResult>(invocation, attribute)
+                                                    ;
+    }
+
+    /// <summary>
+    /// 同步拦截器事务处理
+    /// </summary>
+    /// <param name="invocation"></param>
+    /// <param name="attribute"></param>
+    private void InternalInterceptSynchronous(IInvocation invocation, [NotNull] UnitOfWorkAttribute attribute)
+    {
+        try
         {
-            var attribute = GetAttribute(invocation);
-
-            if (attribute == null)
-                invocation.Proceed();
-            else
-                InternalInterceptSynchronous(invocation, attribute);
+            _unitOfWork.BeginTransaction(distributed: attribute.SharedToCap);
+            invocation.Proceed();
+            _unitOfWork.Commit();
         }
-
-        /// <summary>
-        /// 异步拦截器 无返回值
-        /// </summary>
-        /// <param name="invocation"></param>
-        public void InterceptAsynchronous(IInvocation invocation)
+        catch (Exception)
         {
-            var attribute = GetAttribute(invocation);
-
-            invocation.ReturnValue = (attribute is null)
-                                                        ? InternalInterceptAsynchronousWithoutUow(invocation)
-                                                        : InternalInterceptAsynchronous(invocation, attribute)
-                                                        ;
+            _unitOfWork.Rollback();
+            throw;
         }
-
-        /// <summary>
-        /// 异步拦截器 有返回值
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="invocation"></param>
-        public void InterceptAsynchronous<TResult>(IInvocation invocation)
+        finally
         {
-            var attribute = GetAttribute(invocation);
-
-            invocation.ReturnValue = (attribute is null)
-                                                        ? InternalInterceptAsynchronousWithoutUow<TResult>(invocation)
-                                                        : InternalInterceptAsynchronous<TResult>(invocation, attribute)
-                                                        ;
+            _unitOfWork.Dispose();
         }
+    }
 
-        /// <summary>
-        /// 同步拦截器事务处理
-        /// </summary>
-        /// <param name="invocation"></param>
-        /// <param name="attribute"></param>
-        private void InternalInterceptSynchronous(IInvocation invocation, [NotNull] UnitOfWorkAttribute attribute)
+    /// <summary>
+    /// 异步拦截器事务处理-无返回值
+    /// </summary>
+    /// <param name="invocation"></param>
+    /// <param name="attribute"></param>
+    /// <returns></returns>
+    private async Task InternalInterceptAsynchronous(IInvocation invocation, [NotNull] UnitOfWorkAttribute attribute)
+    {
+        try
         {
-            try
-            {
-                _unitOfWork.BeginTransaction(distributed: attribute.SharedToCap);
-                invocation.Proceed();
-                _unitOfWork.Commit();
-            }
-            catch (Exception)
-            {
-                _unitOfWork.Rollback();
-                throw;
-            }
-            finally
-            {
-                _unitOfWork.Dispose();
-            }
-        }
+            _unitOfWork.BeginTransaction(distributed: attribute.SharedToCap);
 
-        /// <summary>
-        /// 异步拦截器事务处理-无返回值
-        /// </summary>
-        /// <param name="invocation"></param>
-        /// <param name="attribute"></param>
-        /// <returns></returns>
-        private async Task InternalInterceptAsynchronous(IInvocation invocation, [NotNull] UnitOfWorkAttribute attribute)
-        {
-            try
-            {
-                _unitOfWork.BeginTransaction(distributed: attribute.SharedToCap);
-
-                invocation.Proceed();
-                var task = (Task)invocation.ReturnValue;
-                await task;
-
-                await _unitOfWork.CommitAsync();
-            }
-            catch (Exception)
-            {
-                await _unitOfWork.RollbackAsync();
-                throw;
-            }
-            finally
-            {
-                _unitOfWork.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// 异步拦截器事务处理-有返回值
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="invocation"></param>
-        /// <param name="attribute"></param>
-        /// <returns></returns>
-        private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation, [NotNull] UnitOfWorkAttribute attribute)
-        {
-            TResult result;
-
-            try
-            {
-                _unitOfWork.BeginTransaction(distributed: attribute.SharedToCap);
-
-                invocation.Proceed();
-                var task = (Task<TResult>)invocation.ReturnValue;
-                result = await task;
-
-                await _unitOfWork.CommitAsync();
-            }
-            catch (Exception)
-            {
-                await _unitOfWork.RollbackAsync();
-                throw;
-            }
-            finally
-            {
-                _unitOfWork.Dispose();
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// 异步拦截器无事务处理-无返回值
-        /// </summary>
-        /// <param name="invocation"></param>
-        /// <returns></returns>
-        private async Task InternalInterceptAsynchronousWithoutUow(IInvocation invocation)
-        {
             invocation.Proceed();
             var task = (Task)invocation.ReturnValue;
             await task;
-        }
 
-        /// <summary>
-        /// 异步拦截器无事务处理-有返回值
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="invocation"></param>
-        /// <returns></returns>
-        private async Task<TResult> InternalInterceptAsynchronousWithoutUow<TResult>(IInvocation invocation)
+            await _unitOfWork.CommitAsync();
+        }
+        catch (Exception)
         {
-            TResult result;
+            await _unitOfWork.RollbackAsync();
+            throw;
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// 异步拦截器事务处理-有返回值
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="invocation"></param>
+    /// <param name="attribute"></param>
+    /// <returns></returns>
+    private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation, [NotNull] UnitOfWorkAttribute attribute)
+    {
+        TResult result;
+
+        try
+        {
+            _unitOfWork.BeginTransaction(distributed: attribute.SharedToCap);
+
             invocation.Proceed();
             var task = (Task<TResult>)invocation.ReturnValue;
             result = await task;
-            return result;
+
+            await _unitOfWork.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await _unitOfWork.RollbackAsync();
+            throw;
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
         }
 
-        /// <summary>
-        /// 获取拦截器attrbute
-        /// </summary>
-        /// <param name="invocation"></param>
-        /// <returns></returns>
-        private UnitOfWorkAttribute GetAttribute(IInvocation invocation)
-        {
-            var methodInfo = invocation.Method ?? invocation.MethodInvocationTarget;
-            var attribute = methodInfo.GetCustomAttribute<UnitOfWorkAttribute>();
-            return attribute;
-        }
+        return result;
+    }
+
+    /// <summary>
+    /// 异步拦截器无事务处理-无返回值
+    /// </summary>
+    /// <param name="invocation"></param>
+    /// <returns></returns>
+    private async Task InternalInterceptAsynchronousWithoutUow(IInvocation invocation)
+    {
+        invocation.Proceed();
+        var task = (Task)invocation.ReturnValue;
+        await task;
+    }
+
+    /// <summary>
+    /// 异步拦截器无事务处理-有返回值
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="invocation"></param>
+    /// <returns></returns>
+    private async Task<TResult> InternalInterceptAsynchronousWithoutUow<TResult>(IInvocation invocation)
+    {
+        TResult result;
+        invocation.Proceed();
+        var task = (Task<TResult>)invocation.ReturnValue;
+        result = await task;
+        return result;
+    }
+
+    /// <summary>
+    /// 获取拦截器attrbute
+    /// </summary>
+    /// <param name="invocation"></param>
+    /// <returns></returns>
+    private UnitOfWorkAttribute GetAttribute(IInvocation invocation)
+    {
+        var methodInfo = invocation.Method ?? invocation.MethodInvocationTarget;
+        var attribute = methodInfo.GetCustomAttribute<UnitOfWorkAttribute>();
+        return attribute;
     }
 }

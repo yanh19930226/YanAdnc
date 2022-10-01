@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Consts\PermissionConsts\Permissions.Maint.cs" />
+    <Compile Remove="Consts\Permission\Permissions.Maint.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Consts\PermissionConsts\Permissions.Maint.cs" />
+    <None Include="Consts\Permission\Permissions.Maint.cs" />
   </ItemGroup>
 
 </Project>

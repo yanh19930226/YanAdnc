@@ -26,23 +26,23 @@ namespace Adnc.Infra.Caching
         IRedisSerializer Serializer { get; }
 
         /// <summary>
-        /// Set the specified cacheKey, ReValue and expiration.
+        /// Set the specified cacheKey, cacheValue and expiration.
         /// </summary>
         /// <param name="cacheKey">Cache key.</param>
-        /// <param name="ReValue">Cache value.</param>
+        /// <param name="cacheValue">Cache value.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        void Set<T>(string cacheKey, T ReValue, TimeSpan expiration);
+        void Set<T>(string cacheKey, T cacheValue, TimeSpan expiration);
 
         /// <summary>
-        /// Sets the specified cacheKey, ReValue and expiration async.
+        /// Sets the specified cacheKey, cacheValue and expiration async.
         /// </summary>
         /// <returns>The async.</returns>
         /// <param name="cacheKey">Cache key.</param>
-        /// <param name="ReValue">Cache value.</param>
+        /// <param name="cacheValue">Cache value.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        Task SetAsync<T>(string cacheKey, T ReValue, TimeSpan expiration);
+        Task SetAsync<T>(string cacheKey, T cacheValue, TimeSpan expiration);
 
         /// <summary>
         /// Get the specified cacheKey.
@@ -50,7 +50,7 @@ namespace Adnc.Infra.Caching
         /// <returns>The get.</returns>
         /// <param name="cacheKey">Cache key.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        ReValue<T> Get<T>(string cacheKey);
+       ReValue<T> Get<T>(string cacheKey);
 
         /// <summary>
         /// Get the specified cacheKey async.
@@ -92,20 +92,20 @@ namespace Adnc.Infra.Caching
         /// </summary>
         /// <returns><c>true</c>, if set was tryed, <c>false</c> otherwise.</returns>
         /// <param name="cacheKey">Cache key.</param>
-        /// <param name="ReValue">Cache value.</param>
+        /// <param name="cacheValue">Cache value.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        bool TrySet<T>(string cacheKey, T ReValue, TimeSpan expiration);
+        bool TrySet<T>(string cacheKey, T cacheValue, TimeSpan expiration);
 
         /// <summary>
         /// Tries the set async.
         /// </summary>
         /// <returns>The set async.</returns>
         /// <param name="cacheKey">Cache key.</param>
-        /// <param name="ReValue">Cache value.</param>
+        /// <param name="cacheValue">Cache value.</param>
         /// <param name="expiration">Expiration.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        Task<bool> TrySetAsync<T>(string cacheKey, T ReValue, TimeSpan expiration);
+        Task<bool> TrySetAsync<T>(string cacheKey, T cacheValue, TimeSpan expiration);
 
         /// <summary>
         /// Sets all.

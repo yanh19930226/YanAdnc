@@ -1,9 +1,12 @@
-﻿using Adnc.Infra.Helper;
+﻿using Adnc.Infra.Core.DependencyInjection;
+using Adnc.Infra.Helper;
 using Adnc.Infra.Mapper;
 using Adnc.Shared.Application.Contracts.Interfaces;
 using Adnc.Shared.Application.Contracts.ResultModels;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -18,7 +21,7 @@ namespace Adnc.Shared.Application.Services
         {
             get
             {
-                var httpContext = HttpContextHelper.GetCurrentHttpContext();
+                var httpContext = InfraHelper.Accessor.GetCurrentHttpContext();
                 if (httpContext is not null)
                     return httpContext.RequestServices.GetRequiredService<IObjectMapper>();
                 if (ServiceLocator.Provider is not null)

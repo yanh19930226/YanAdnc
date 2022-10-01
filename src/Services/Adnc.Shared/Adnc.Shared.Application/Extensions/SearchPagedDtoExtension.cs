@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Adnc.Shared.Application.Contracts.Dtos.Searchs;
 
-namespace Adnc.Shared.Application.Extensions
+namespace Adnc.Shared.Application.Contracts.Dtos;
+
+public static class SearchPagedDtoExtension
 {
-    public static class SearchPagedDtoExtension
-    {
-        /// <summary>
-        /// 计算查询需要跳过的行数
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        public static int SkipRows(this ISearchPagedDto dto) => (dto.PageIndex - 1) * dto.PageSize;
-    }
+    /// <summary>
+    /// 计算查询需要跳过的行数
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns></returns>
+    public static int SkipRows(this ISearchPagedDto dto) => (dto.PageIndex - 1) * dto.PageSize;
 }

@@ -8,6 +8,7 @@ namespace Adnc.Infra.Core.Adnc.Configuration
 {
     public class ConsulConfig
     {
+        public const string Name = "Consul";
         public string ConsulUrl { get; set; }
         public string ServiceName { get; set; }
         public string HealthCheckUrl { get; set; }
