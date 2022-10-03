@@ -3,7 +3,7 @@
 /// <summary>
 /// 菜单角色关系
 /// </summary>
-public class SysRelation : EfEntity
+public class SysRelation : Entity
 {
     public long MenuId { get; set; }
 

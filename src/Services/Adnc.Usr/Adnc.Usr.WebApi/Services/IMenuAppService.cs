@@ -1,4 +1,12 @@
-﻿namespace Adnc.Usr.Application.Contracts.Services
+﻿using Adnc.Infra.Caching.Core.Interceptor;
+using Adnc.Shared.Application.Contracts.Attributes;
+using Adnc.Shared.Application.Contracts.Interfaces;
+using Adnc.Shared.Application.Contracts.ResultModels;
+using Adnc.Shared.Consts.Caching.Usr;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.Application.Contracts.Services
 {
     /// <summary>
     /// 菜单/权限服务

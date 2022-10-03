@@ -1,9 +1,12 @@
-﻿namespace Adnc.Usr.Entities;
+﻿using Adnc.Infra.Repository.Entities;
+using System.Collections.ObjectModel;
+
+namespace Adnc.Usr.Entities;
 
 /// <summary>
 /// 菜单
 /// </summary>
-public class SysMenu : EfFullAuditEntity
+public class SysMenu : Entity
 {
     /// <summary>
     /// 编号

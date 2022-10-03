@@ -1,17 +1,34 @@
-﻿namespace Adnc.Usr.Application.Services;
+﻿using Adnc.Infra.Core.System.Extensions.String;
+using Adnc.Infra.Helper;
+using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Application.Contracts.Dtos;
+using Adnc.Shared.Application.Contracts.Dtos.Searchs;
+using Adnc.Shared.Application.Contracts.ResultModels;
+using Adnc.Shared.Application.Services;
+using Adnc.Shared.Consts.Caching.Usr;
+using Adnc.Usr.Application.Contracts.Dtos;
+using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.Application.Services;
 
 public class UserAppService : AbstractAppService, IUserAppService
 {
-    private readonly IEfRepository<SysUser> _userRepository;
-    private readonly IEfRepository<SysRole> _roleRepository;
-    private readonly IEfRepository<SysMenu> _menuRepository;
+    private readonly IBaseRepository<SysUser> _userRepository;
+    private readonly IBaseRepository<SysRole> _roleRepository;
+    private readonly IBaseRepository<SysMenu> _menuRepository;
     private readonly CacheService _cacheService;
     private readonly BloomFilterFactory _bloomFilterFactory;
 
     public UserAppService(
-        IEfRepository<SysUser> userRepository
-        , IEfRepository<SysRole> roleRepository
-        , IEfRepository<SysMenu> menuRepository
+        IBaseRepository<SysUser> userRepository
+        , IBaseRepository<SysRole> roleRepository
+        , IBaseRepository<SysMenu> menuRepository
         , CacheService cacheService
        , BloomFilterFactory bloomFilterFactory)
     {

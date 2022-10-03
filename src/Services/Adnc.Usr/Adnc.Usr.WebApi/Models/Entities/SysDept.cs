@@ -1,9 +1,12 @@
-﻿namespace Adnc.Usr.Entities;
+﻿using Adnc.Infra.Repository.Entities;
+using System.Collections.Generic;
+
+namespace Adnc.Usr.Entities;
 
 /// <summary>
 /// 部门
 /// </summary>
-public class SysDept : EfFullAuditEntity
+public class SysDept : Entity
 {
     //private ICollection<SysUser> _users;
     //private Action<object, string> LazyLoader { get; set; }

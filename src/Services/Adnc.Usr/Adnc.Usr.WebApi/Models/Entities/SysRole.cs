@@ -1,9 +1,12 @@
-﻿namespace Adnc.Usr.Entities;
+﻿using Adnc.Infra.Repository.Entities;
+using System.Collections.ObjectModel;
+
+namespace Adnc.Usr.Entities;
 
 /// <summary>
 /// 角色
 /// </summary>
-public class SysRole : EfFullAuditEntity
+public class SysRole : Entity
 {
     public long? DeptId { get; set; }
 

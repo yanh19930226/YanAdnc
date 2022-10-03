@@ -1,13 +1,32 @@
-﻿namespace Adnc.Usr.Application.Services;
+﻿using Adnc.Infra.Core.System.Extensions.String;
+using Adnc.Infra.Helper;
+using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Application.BloomFilter;
+using Adnc.Shared.Application.Channels;
+using Adnc.Shared.Application.Contracts.ResultModels;
+using Adnc.Shared.Application.Services;
+using Adnc.Shared.Consts.Caching.Usr;
+using Adnc.Shared.Repository.MongoEntities;
+using Adnc.Usr.Application.Caching;
+using Adnc.Usr.Application.Contracts.Dtos;
+using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.Entities;
+using Adnc.Usr.WebApi.Models.Vos;
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.Application.Services;
 
 public class AccountAppService : AbstractAppService, IAccountAppService
 {
-    private readonly IEfRepository<SysUser> _userRepository;
+    private readonly IBaseRepository<SysUser> _userRepository;
     private readonly CacheService _cacheService;
     private readonly BloomFilterFactory _bloomFilterFactory;
 
     public AccountAppService(
-        IEfRepository<SysUser> userRepository
+        IBaseRepository<SysUser> userRepository
        , CacheService cacheService
        , BloomFilterFactory bloomFilterFactory)
     {
@@ -16,7 +35,7 @@ public class AccountAppService : AbstractAppService, IAccountAppService
         _bloomFilterFactory = bloomFilterFactory;
     }
 
-    public async Task<AppSrvResult<UserValidatedInfoDto>> LoginAsync(UserLoginDto input)
+    public async Task<AppSrvResult<UserValidatedInfoVo>> LoginAsync(UserLoginDto input)
     {
         var accountsFilter = _bloomFilterFactory.Create(CachingConsts.BloomfilterOfAccountsKey);
         var exists = await accountsFilter.ExistsAsync(input.Account.ToLower());
@@ -100,7 +119,7 @@ public class AccountAppService : AbstractAppService, IAccountAppService
         log.Succeed = true;
         await channelWriter.WriteAsync(log);
 
-        var userValidtedInfo = new UserValidatedInfoDto(user.Id, user.Account, user.Name, user.RoleIds, user.Status);
+        var userValidtedInfo = new UserValidatedInfoVo(user.Id, user.Account, user.Name, user.RoleIds, user.Status);
         await _cacheService.SetValidateInfoToCacheAsync(userValidtedInfo);
 
         return userValidtedInfo;

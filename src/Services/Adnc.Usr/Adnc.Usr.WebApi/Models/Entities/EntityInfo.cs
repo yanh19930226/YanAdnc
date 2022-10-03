@@ -1,4 +1,6 @@
 ﻿using Adnc.Shared;
+using Adnc.Shared.Repository.EfEntities;
+using System.Reflection;
 
 namespace Adnc.Usr.Entities;
 

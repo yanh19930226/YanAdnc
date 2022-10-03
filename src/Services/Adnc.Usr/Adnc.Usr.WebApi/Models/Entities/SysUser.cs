@@ -1,9 +1,12 @@
-﻿namespace Adnc.Usr.Entities;
+﻿using Adnc.Infra.Repository.Entities;
+using System;
+
+namespace Adnc.Usr.Entities;
 
 /// <summary>
 /// 管理员
 /// </summary>
-public class SysUser : EfFullAuditEntity, ISoftDelete
+public class SysUser : Entity
 {
     //private SysDept _dept;
     //private Action<object, string> LazyLoader { get; set; }

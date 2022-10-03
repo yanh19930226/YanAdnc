@@ -1,5 +1,11 @@
-﻿using Adnc.Shared.Application.Contracts.Attributes;
+﻿using Adnc.Infra.Caching.Core.Interceptor;
+using Adnc.Shared.Application.Contracts.Attributes;
 using Adnc.Shared.Application.Contracts.Interfaces;
+using Adnc.Shared.Application.Contracts.ResultModels;
+using Adnc.Shared.Consts.Caching.Usr;
+using Adnc.Usr.Application.Contracts.Dtos;
+using Adnc.Usr.WebApi.Models.Vos;
+using System.Threading.Tasks;
 
 namespace Adnc.Usr.Application.Contracts.Services
 {
@@ -14,7 +20,7 @@ namespace Adnc.Usr.Application.Contracts.Services
         /// <param name="input"></param>
         /// <returns></returns>
         [OperateLog(LogName = "登录")]
-        Task<AppSrvResult<UserValidatedInfoDto>> LoginAsync(UserLoginDto input);
+        Task<AppSrvResult<UserValidatedInfoVo>> LoginAsync(UserLoginDto input);
 
         /// <summary>
         /// 修改密码
@@ -33,7 +39,7 @@ namespace Adnc.Usr.Application.Contracts.Services
         /// <returns></returns>
         //[OperateLog(LogName = "获取认证信息")]
         [CachingAble(CacheKeyPrefix = CachingConsts.UserValidatedInfoKeyPrefix)]
-        Task<UserValidatedInfoDto> GetUserValidatedInfoAsync([CachingParam] long id) => Task.FromResult<UserValidatedInfoDto>(null);
+        Task<UserValidatedInfoVo> GetUserValidatedInfoAsync([CachingParam] long id) => Task.FromResult<UserValidatedInfoVo>(null);
 
         /// <summary>
         /// 移除认证信息

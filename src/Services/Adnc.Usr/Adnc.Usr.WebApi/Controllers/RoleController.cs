@@ -1,4 +1,12 @@
-﻿namespace Adnc.Usr.WebApi.Controllers;
+﻿using Adnc.Shared.Consts.Permissions.Usr;
+using Adnc.Shared.WebApi.Authorization;
+using Adnc.Shared.WebApi.Controller;
+using Adnc.Usr.Application.Contracts.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.WebApi.Controllers;
 
 /// <summary>
 /// 角色
