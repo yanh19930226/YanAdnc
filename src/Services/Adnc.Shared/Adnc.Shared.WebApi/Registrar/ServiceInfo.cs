@@ -13,7 +13,9 @@ namespace Adnc.Shared.WebApi.Registrar
     {
         private static ServiceInfo _instance = null;
         private static readonly object _lockObj = new();
-
+        private ServiceInfo()
+        {
+        }
         public string Id { get; private set; }
         public string ServiceName { get; private set; }
         public string CorsPolicy { get; set; }
@@ -21,10 +23,6 @@ namespace Adnc.Shared.WebApi.Registrar
         public string Version { get; private set; }
         public string Description { get; private set; }
         public Assembly StartAssembly { get; private set; }
-
-        private ServiceInfo()
-        {
-        }
 
         public static ServiceInfo CreateInstance(Assembly startAssembly)
         {

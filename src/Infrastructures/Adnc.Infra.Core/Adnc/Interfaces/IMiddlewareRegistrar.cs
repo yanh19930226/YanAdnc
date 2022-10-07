@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Adnc.Shared.WebApi.Registrar
+namespace Adnc.Infra.Core.Adnc.Interfaces
 {
     public interface IMiddlewareRegistrar
     {
         public void UseAdnc();
     }
-
 }

@@ -22,7 +22,7 @@ namespace Adnc.Shared.WebApi.Registrar
         /// <summary>
         /// 服务注册与系统配置
         /// </summary>
-        /// <param name="services"><see cref="IServiceInfo"/></param>
+        /// <param name="services"></param>
         protected AbstractWebApiDependencyRegistrar(IServiceCollection services)
         {
             Services = services;

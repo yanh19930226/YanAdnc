@@ -1,7 +1,5 @@
-﻿using Adnc.Infra.Core.Adnc.Configuration;
-using Adnc.Infra.Core.Adnc.Interfaces;
+﻿using Adnc.Infra.Core.Adnc.Interfaces;
 using Adnc.Infra.Core.System.Extensions.String;
-using Adnc.Shared.WebApi;
 using Adnc.Shared.WebApi.Registrar;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

@@ -1,4 +1,8 @@
 ﻿using Adnc.Shared.Application.Registrar;
+using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.Entities;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Adnc.Usr.Application.Registrar;
 

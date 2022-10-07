@@ -1,6 +1,5 @@
 ﻿using Adnc.Infra.Core.Adnc.Interfaces;
 using Adnc.Infra.Core.System.Extensions.Types;
-using Adnc.Shared.WebApi.Registrar;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.AspNetCore.Builder;
