@@ -3,8 +3,8 @@ using Adnc.Shared.Application.Contracts.Attributes;
 using Adnc.Shared.Application.Contracts.Interfaces;
 using Adnc.Shared.Application.Contracts.ResultModels;
 using Adnc.Shared.Consts.Caching.Usr;
-using Adnc.Usr.Application.Contracts.Dtos;
-using Adnc.Usr.WebApi.Models.Vos;
+using Adnc.Usr.WebApi.Models.Dtos.Users;
+using Adnc.Usr.WebApi.Models.Vos.Users;
 using System.Threading.Tasks;
 
 namespace Adnc.Usr.Application.Contracts.Services
@@ -38,7 +38,7 @@ namespace Adnc.Usr.Application.Contracts.Services
         /// <param name="id"></param>
         /// <returns></returns>
         //[OperateLog(LogName = "获取认证信息")]
-        [CachingAble(CacheKeyPrefix = CachingConsts.UserValidatedInfoKeyPrefix)]
+        [CachingAble(CacheKeyPrefix = CachingConsts.UserValidatedInfoKeyPrefix) ]
         Task<UserValidatedInfoVo> GetUserValidatedInfoAsync([CachingParam] long id) => Task.FromResult<UserValidatedInfoVo>(null);
 
         /// <summary>

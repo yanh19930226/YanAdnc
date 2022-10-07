@@ -1,4 +1,19 @@
-﻿namespace Adnc.Usr.WebApi.Controllers;
+﻿using Adnc.Shared;
+using Adnc.Shared.Application.Contracts.Dtos;
+using Adnc.Shared.Application.Contracts.Vos;
+using Adnc.Shared.Consts.Permissions.Usr;
+using Adnc.Shared.WebApi.Authorization;
+using Adnc.Shared.WebApi.Controller;
+using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.WebApi.Models.Dtos.Users;
+using Adnc.Usr.WebApi.Models.Vos.Users;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.WebApi.Controllers;
 
 /// <summary>
 /// 用户管理
@@ -118,7 +133,7 @@ public class UserController : AdncControllerBase
     [HttpGet()]
     [AdncAuthorize(PermissionConsts.User.GetList)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<PageModelDto<UserDto>>> GetPagedAsync([FromQuery] UserSearchPagedDto search)
+    public async Task<ActionResult<PageModelDto<UserVo>>> GetPagedAsync([FromQuery] UserSearchPagedDto search)
         => await _userService.GetPagedAsync(search);
 
     /// <summary>
@@ -127,5 +142,5 @@ public class UserController : AdncControllerBase
     /// <returns></returns>
     [HttpGet("current")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<UserInfoDto>> GetCurrentUserInfoAsync() => await _userService.GetUserInfoAsync(_userContext.Id);
+    public async Task<ActionResult<UserInfoVo>> GetCurrentUserInfoAsync() => await _userService.GetUserInfoAsync(_userContext.Id);
 }

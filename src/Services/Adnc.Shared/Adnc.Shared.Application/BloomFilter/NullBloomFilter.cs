@@ -1,4 +1,6 @@
-﻿namespace Adnc.Shared.Application.BloomFilter;
+﻿ using Adnc.Infra.Caching;
+
+namespace Adnc.Shared.Application.BloomFilter;
 
 public sealed class NullBloomFilter : AbstractBloomFilter
 {

@@ -6,7 +6,7 @@ using Adnc.Ord.Application.Contracts.Dtos;
 using Adnc.Ord.Application.Contracts.Services;
 using Adnc.Ord.Domain.Aggregates.OrderAggregate;
 using Adnc.Ord.Domain.Services;
-using Adnc.Shared.Application.Contracts.Dtos.Searchs;
+using Adnc.Shared.Application.Contracts.Vos;
 using Adnc.Shared.Application.Services;
 using System;
 using System.Collections.Generic;

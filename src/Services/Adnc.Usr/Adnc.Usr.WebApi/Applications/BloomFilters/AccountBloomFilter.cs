@@ -1,4 +1,15 @@
-﻿namespace Adnc.Usr.Application.BloomFilters;
+﻿using Adnc.Infra.Caching;
+using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Application.BloomFilter;
+using Adnc.Shared.Consts.Caching.Usr;
+using Adnc.Usr.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.Application.BloomFilters;
 
 public class AccountBloomFilter : AbstractBloomFilter
 {
@@ -22,7 +33,7 @@ public class AccountBloomFilter : AbstractBloomFilter
         if (!exists)
         {
             using var scope = _services.Value.CreateScope();
-            var repository = scope.ServiceProvider.GetRequiredService<IEfRepository<SysUser>>();
+            var repository = scope.ServiceProvider.GetRequiredService<IBaseRepository<SysUser>>();
             var values = await repository.GetAll()
                                          .Select(x => x.Account)
                                          .ToListAsync();

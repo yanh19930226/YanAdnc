@@ -1,10 +1,11 @@
 ﻿using Adnc.Infra.Caching.Core.Interceptor;
 using Adnc.Shared.Application.Contracts.Attributes;
-using Adnc.Shared.Application.Contracts.Dtos.Searchs;
 using Adnc.Shared.Application.Contracts.Interfaces;
 using Adnc.Shared.Application.Contracts.ResultModels;
+using Adnc.Shared.Application.Contracts.Vos;
 using Adnc.Shared.Consts.Caching.Usr;
-using Adnc.Usr.Application.Contracts.Dtos;
+using Adnc.Usr.WebApi.Models.Dtos.Users;
+using Adnc.Usr.WebApi.Models.Vos.Users;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -88,13 +89,13 @@ namespace Adnc.Usr.Application.Contracts.Services
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
-        Task<PageModelDto<UserDto>> GetPagedAsync(UserSearchPagedDto search);
+        Task<PageModelDto<UserVo>> GetPagedAsync(UserSearchPagedDto search);
 
         /// <summary>
         /// 获取用户信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<UserInfoDto> GetUserInfoAsync(long id);
+        Task<UserInfoVo> GetUserInfoAsync(long id);
     }
 }

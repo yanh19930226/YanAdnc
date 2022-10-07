@@ -4,6 +4,7 @@ using Adnc.Shared;
 using Adnc.Shared.WebApi.Authentication.JwtBearer;
 using Adnc.Shared.WebApi.Controller;
 using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.WebApi.Models.Dtos.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +48,7 @@ public class AccountController : AdncControllerBase
     [AllowAnonymous]
     [HttpPost()]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<UserTokenInfoVo>> LoginAsync([FromBody] UserLoginDto input)
+    public async Task<ActionResult<UserTokenInfoDto>> LoginAsync([FromBody] UserLoginDto input)
     {
         var result = await _accountService.LoginAsync(input);
         if (result.IsSuccess)
@@ -55,7 +56,7 @@ public class AccountController : AdncControllerBase
             var validatedInfo = result.Content;
             var accessToken = JwtTokenHelper.CreateAccessToken(_jwtOptions.Value, validatedInfo.ValidationVersion, validatedInfo.Account, validatedInfo.Id.ToString(), validatedInfo.Name, validatedInfo.RoleIds, JwtBearerDefaults.Manager);
             var refreshToken = JwtTokenHelper.CreateRefreshToken(_jwtOptions.Value, validatedInfo.ValidationVersion, validatedInfo.Id.ToString());
-            var tokenInfo = new UserTokenInfoVo(accessToken.Token, accessToken.Expire, refreshToken.Token, refreshToken.Expire);
+            var tokenInfo = new UserTokenInfoDto(accessToken.Token, accessToken.Expire, refreshToken.Token, refreshToken.Expire);
             return Created($"/auth/session", tokenInfo);
         }
         return Problem(result.ProblemDetails);
@@ -76,7 +77,7 @@ public class AccountController : AdncControllerBase
     /// <returns></returns>
     [AllowAnonymous, HttpPut()]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<UserTokenInfoVo>> RefreshAccessTokenAsync([FromBody] UserRefreshTokenDto input)
+    public async Task<ActionResult<UserTokenInfoDto>> RefreshAccessTokenAsync([FromBody] UserRefreshTokenDto input)
     {
         var claimOfId = JwtTokenHelper.GetClaimFromRefeshToken(_jwtOptions.Value, input.RefreshToken, JwtRegisteredClaimNames.NameId);
         if (claimOfId is not null)
@@ -98,7 +99,7 @@ public class AccountController : AdncControllerBase
 
             await _accountService.ChangeUserValidateInfoExpiresDtAsync(id.Value);
 
-            var tokenInfo = new UserTokenInfoVo(accessToken.Token, accessToken.Expire, refreshToken.Token, refreshToken.Expire);
+            var tokenInfo = new UserTokenInfoDto(accessToken.Token, accessToken.Expire, refreshToken.Token, refreshToken.Expire);
             return Ok(tokenInfo);
         }
         return Forbid();
@@ -121,7 +122,7 @@ public class AccountController : AdncControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserTokenInfoVo>> GetUserValidatedInfoAsync()
+    public async Task<ActionResult<UserTokenInfoDto>> GetUserValidatedInfoAsync()
     {
         var result = await _accountService.GetUserValidatedInfoAsync(_userContext.Id);
         _logger.LogDebug($"UserContext:{_userContext.Id}");

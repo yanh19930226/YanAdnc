@@ -1,4 +1,9 @@
-﻿using Adnc.Shared.Rpc.Grpc.Messages;
+﻿using Adnc.Infra.Repository.IRepositories.Models;
+using Adnc.Shared.Application.Contracts.Vos;
+using Adnc.Usr.Application.Contracts.Dtos;
+using Adnc.Usr.Entities;
+using Adnc.Usr.WebApi.Models.Dtos.Users;
+using Adnc.Usr.WebApi.Models.Vos.Users;
 using AutoMapper;
 
 namespace Adnc.Usr.Application.AutoMapper;
@@ -22,7 +27,7 @@ public sealed class UsrProfile : Profile
         CreateMap<SysRole, RoleDto>().ReverseMap();
         CreateMap<UserCreationDto, SysUser>();
         CreateMap<UserUpdationDto, SysUser>();
-        CreateMap<SysUser, UserDto>().ForMember(dest => dest.Password, opt => opt.Ignore());
+        CreateMap<SysUser, UserVo>().ForMember(dest => dest.Password, opt => opt.Ignore());
         CreateMap<DeptCreationDto, SysDept>();
         CreateMap<DeptUpdationDto, SysDept>();
         CreateMap<SysDept, DeptDto>();

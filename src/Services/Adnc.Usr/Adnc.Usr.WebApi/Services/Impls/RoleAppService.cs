@@ -1,15 +1,34 @@
-﻿namespace Adnc.Usr.Application.Services;
+﻿using Adnc.Infra.Core.System.Extensions.String;
+using Adnc.Infra.Helper;
+using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Application.Contracts.Dtos;
+using Adnc.Shared.Application.Contracts.ResultModels;
+using Adnc.Shared.Application.Contracts.Vos;
+using Adnc.Shared.Application.Services;
+using Adnc.Usr.Application.Caching;
+using Adnc.Usr.Application.Contracts.Dtos;
+using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.Application.Services;
 
 public class RoleAppService : AbstractAppService, IRoleAppService
 {
-    private readonly IEfRepository<SysRole> _roleRepository;
-    private readonly IEfRepository<SysUser> _userRepository;
-    private readonly IEfRepository<SysRelation> _relationRepository;
+    private readonly IBaseRepository<SysRole> _roleRepository;
+    private readonly IBaseRepository<SysUser> _userRepository;
+    private readonly IBaseRepository<SysRelation> _relationRepository;
     private readonly CacheService _cacheService;
 
-    public RoleAppService(IEfRepository<SysRole> roleRepository,
-        IEfRepository<SysUser> userRepository,
-        IEfRepository<SysRelation> relationRepository,
+    public RoleAppService(IBaseRepository<SysRole> roleRepository,
+        IBaseRepository<SysUser> userRepository,
+        IBaseRepository<SysRelation> relationRepository,
         CacheService cacheService)
     {
         _roleRepository = roleRepository;

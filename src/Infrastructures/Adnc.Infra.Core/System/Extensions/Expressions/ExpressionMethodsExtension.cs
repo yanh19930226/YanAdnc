@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Adnc.Infra.Core.System.Extensions.Expressions
+﻿namespace System.Linq.Expressions
 {
     public static class ExpressionMethodsExtension
     {
@@ -58,8 +49,8 @@ namespace Adnc.Infra.Core.System.Extensions.Expressions
         /// <typeparam name="TMember">TMember</typeparam>
         /// <param name="memberExpression">get member expression</param>
         /// <returns></returns>
-        public static string GetMemberName<TEntity, TMember>([NotNull] this Expression<Func<TEntity, TMember>> memberExpression)
-            => GetMemberInfo(memberExpression)?.Name;
+        public static string? GetMemberName<TEntity, TMember>(this Expression<Func<TEntity, TMember>> memberExpression)=>
+            GetMemberInfo(memberExpression)?.Name;
 
         /// <summary>
         /// GetMemberInfo
@@ -89,7 +80,7 @@ namespace Adnc.Infra.Core.System.Extensions.Expressions
         /// <typeparam name="TProperty"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static PropertyInfo GetProperty<TEntity, TProperty>([NotNull] this Expression<Func<TEntity, TProperty>> expression)
+        public static PropertyInfo? GetProperty<TEntity, TProperty>([NotNull] this Expression<Func<TEntity, TProperty>> expression)
         {
             var member = GetMemberInfo(expression);
             if (null == member)
@@ -101,7 +92,7 @@ namespace Adnc.Infra.Core.System.Extensions.Expressions
             return typeof(TEntity).GetProperty(member.Name);
         }
 
-        private static MemberExpression ExtractMemberExpression(Expression expression)
+        private static MemberExpression? ExtractMemberExpression(Expression expression)
         {
             if (expression.NodeType == ExpressionType.MemberAccess)
             {
@@ -114,7 +105,7 @@ namespace Adnc.Infra.Core.System.Extensions.Expressions
                 return ExtractMemberExpression(operand);
             }
 
-            return null;
+            return default;
         }
     }
 }

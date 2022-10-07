@@ -1,7 +1,7 @@
 ﻿using Adnc.Ord.Application.Contracts.Dtos;
 using Adnc.Shared.Application.Contracts.Attributes;
-using Adnc.Shared.Application.Contracts.Dtos.Searchs;
 using Adnc.Shared.Application.Contracts.Interfaces;
+using Adnc.Shared.Application.Contracts.Vos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

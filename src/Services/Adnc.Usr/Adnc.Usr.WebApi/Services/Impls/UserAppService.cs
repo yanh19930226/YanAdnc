@@ -1,17 +1,22 @@
 ﻿using Adnc.Infra.Core.System.Extensions.String;
 using Adnc.Infra.Helper;
 using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Application.BloomFilter;
 using Adnc.Shared.Application.Contracts.Dtos;
-using Adnc.Shared.Application.Contracts.Dtos.Searchs;
 using Adnc.Shared.Application.Contracts.ResultModels;
+using Adnc.Shared.Application.Contracts.Vos;
 using Adnc.Shared.Application.Services;
 using Adnc.Shared.Consts.Caching.Usr;
-using Adnc.Usr.Application.Contracts.Dtos;
+using Adnc.Usr.Application.Caching;
 using Adnc.Usr.Application.Contracts.Services;
 using Adnc.Usr.Entities;
+using Adnc.Usr.WebApi.Models.Dtos.Users;
+using Adnc.Usr.WebApi.Models.Vos.Users;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -119,7 +124,7 @@ public class UserAppService : AbstractAppService, IUserAppService
         return result.ToList();
     }
 
-    public async Task<PageModelDto<UserDto>> GetPagedAsync(UserSearchPagedDto search)
+    public async Task<PageModelDto<UserVo>> GetPagedAsync(UserSearchPagedDto search)
     {
         var whereExpression = ExpressionCreator
                                             .New<SysUser>()
@@ -128,7 +133,7 @@ public class UserAppService : AbstractAppService, IUserAppService
 
         var total = await _userRepository.CountAsync(whereExpression);
         if (total == 0)
-            return new PageModelDto<UserDto>(search);
+            return new PageModelDto<UserVo>(search);
 
         var entities = await _userRepository
                                         .Where(whereExpression)
@@ -137,7 +142,8 @@ public class UserAppService : AbstractAppService, IUserAppService
                                         .Take(search.PageSize)
                                         .ToListAsync();
 
-        var userDtos = Mapper.Map<List<UserDto>>(entities);
+        var userDtos = Mapper.Map<List<UserVo>>(entities);
+
         if (userDtos.IsNotNullOrEmpty())
         {
             var deptIds = userDtos.Where(d => d.DeptId is not null).Select(d => d.DeptId).Distinct();
@@ -156,12 +162,12 @@ public class UserAppService : AbstractAppService, IUserAppService
         }
 
         var xdata = await _cacheService.GetDeptSimpleTreeListAsync();
-        return new PageModelDto<UserDto>(search, userDtos, total, xdata);
+        return new PageModelDto<UserVo>(search, userDtos, total, xdata);
     }
 
-    public async Task<UserInfoDto> GetUserInfoAsync(long id)
+    public async Task<UserInfoVo> GetUserInfoAsync(long id)
     {
-        var userProfile = await _userRepository.FetchAsync(u => new UserProfileDto
+        var userProfile = await _userRepository.FetchAsync(u => new UserProfileVo
         {
             Account = u.Account,
             Avatar = u.Avatar,
@@ -179,7 +185,7 @@ public class UserAppService : AbstractAppService, IUserAppService
         if (userProfile == null)
             return null;
 
-        var userInfoDto = new UserInfoDto { Id = id, Profile = userProfile };
+        var userInfoDto = new UserInfoVo { Id = id, Profile = userProfile };
 
         if (userProfile.RoleIds.IsNotNullOrEmpty())
         {

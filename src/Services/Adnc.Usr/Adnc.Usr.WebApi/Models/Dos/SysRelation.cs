@@ -1,4 +1,6 @@
-﻿namespace Adnc.Usr.Entities;
+﻿using Adnc.Infra.Repository.Entities;
+
+namespace Adnc.Usr.Entities;
 
 /// <summary>
 /// 菜单角色关系

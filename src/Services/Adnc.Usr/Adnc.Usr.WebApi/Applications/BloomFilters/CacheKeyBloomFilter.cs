@@ -1,12 +1,26 @@
-﻿namespace Adnc.Usr.Application.BloomFilters;
+﻿using Adnc.Infra.Caching;
+using Adnc.Infra.Caching.Configurations;
+using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Application.BloomFilter;
+using Adnc.Shared.Consts.Caching.Usr;
+using Adnc.Usr.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.Application.BloomFilters;
 
 public class CacheKeyBloomFilter : AbstractBloomFilter
 {
     private readonly Lazy<IServiceProvider> _serviceProvider;
-    private readonly Lazy<IOptions<CacheOptions>> _cacheOptions;
+    private readonly Lazy<IOptions<RedisOptions>> _cacheOptions;
 
     public CacheKeyBloomFilter(
-        Lazy<IOptions<CacheOptions>> cacheOptions,
+        Lazy<IOptions<RedisOptions>> cacheOptions,
         Lazy<IRedisProvider> redisProvider,
         Lazy<IDistributedLocker> distributedLocker,
         Lazy<IServiceProvider> serviceProvider)
@@ -40,7 +54,7 @@ public class CacheKeyBloomFilter : AbstractBloomFilter
             };
 
             using var scope = _serviceProvider.Value.CreateScope();
-            var repository = scope.ServiceProvider.GetRequiredService<IEfRepository<SysUser>>();
+            var repository = scope.ServiceProvider.GetRequiredService<IBaseRepository<SysUser>>();
             var ids = await repository
                                                     .GetAll()
                                                     .Select(x => x.Id)

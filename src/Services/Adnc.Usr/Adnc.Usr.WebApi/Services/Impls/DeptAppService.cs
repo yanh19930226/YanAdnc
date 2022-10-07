@@ -1,11 +1,27 @@
-﻿namespace Adnc.Usr.Application.Services;
+﻿using Adnc.Infra.Core.System.Extensions.String;
+using Adnc.Infra.Helper;
+using Adnc.Infra.Repository.IRepositories;
+using Adnc.Shared.Application.Contracts.ResultModels;
+using Adnc.Shared.Application.Services;
+using Adnc.Usr.Application.Caching;
+using Adnc.Usr.Application.Contracts.Dtos;
+using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace Adnc.Usr.Application.Services;
 
 public class DeptAppService : AbstractAppService, IDeptAppService
 {
-    private readonly IEfRepository<SysDept> _deptRepository;
+    private readonly IBaseRepository<SysDept> _deptRepository;
     private readonly CacheService _cacheService;
 
-    public DeptAppService(IEfRepository<SysDept> deptRepository
+    public DeptAppService(IBaseRepository<SysDept> deptRepository
         , CacheService cacheService)
     {
         _deptRepository = deptRepository;
