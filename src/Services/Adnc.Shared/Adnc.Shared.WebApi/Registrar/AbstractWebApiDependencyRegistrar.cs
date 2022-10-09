@@ -177,11 +177,11 @@ namespace Adnc.Shared.WebApi.Registrar
                 .UseRealIp(x => x.HeaderKey = "X-Forwarded-For")
                 .UseCors(serviceInfo.CorsPolicy);
 
-            if (environment.IsDevelopment())
-            {
-                IdentityModelEventSource.ShowPII = true;
-                App.UseMiniProfiler();
-            }
+            //if (environment.IsDevelopment())
+            //{
+            //    IdentityModelEventSource.ShowPII = true;
+            //    App.UseMiniProfiler();
+            //}
 
             App
                 .UseSwagger(c =>

@@ -1,5 +1,4 @@
 ﻿using Adnc.Infra.Core.System.Extensions.Collection;
-using Adnc.Infra.Core.System.Extensions.Expressions;
 using Adnc.Infra.Repository.Entities;
 using Adnc.Infra.Repository.IRepositories;
 using Microsoft.EntityFrameworkCore;
