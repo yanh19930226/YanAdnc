@@ -4,15 +4,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Adnc.Infra.EventBus.Extensions;
 using Microsoft.Extensions.Configuration;
 using Adnc.Infra.Core.Adnc.Configuration;
+using Adnc.Infra.Core.Adnc.Interfaces;
 
 namespace Adnc.Shared.Application.Registrar;
 
-public abstract partial class AbstractApplicationDependencyRegistrar
+public static partial class ApplicationRegistrar
 {
     /// <summary>
     /// 注册CAP组件(实现事件总线及最终一致性（分布式事务）的一个开源的组件)
     /// </summary>
-    protected virtual void AddCapEventBus<TSubscriber>(
+    public static IServiceCollection AddCapEventBus<TSubscriber>(this IServiceCollection Services, IConfigurationSection MysqlSection, IConfigurationSection RabbitMqSection, IServiceInfo ServiceInfo,
         Action<CapOptions> replaceDbAction = null,
         Action<CapOptions> replaceMqAction = null)
         where TSubscriber : class, ICapSubscribe
@@ -86,17 +87,22 @@ public abstract partial class AbstractApplicationDependencyRegistrar
                 x.UseAuth = false;
             });
         });
+
+        return Services;
     }
 
     /// <summary>
     /// 注册RabbitMq-Client
     /// </summary>
-    protected virtual void AddRabbitMqClient(Action<IServiceCollection> action = null)
+    public static IServiceCollection AddRabbitMqClient(this IServiceCollection Services, IConfigurationSection RabbitMqSection,Action<IServiceCollection> action = null)
     {
         action?.Invoke(Services);
 
         if (RabbitMqSection is not null)
             Services.AddAdncInfraRabbitMq(RabbitMqSection);
+
+        return Services;
+
     }
 
 }

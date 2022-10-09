@@ -13,6 +13,9 @@ namespace Adnc.Shared.WebApi.Registrar
     {
         private static ServiceInfo _instance = null;
         private static readonly object _lockObj = new();
+        /// <summary>
+        /// ServiceInfo
+        /// </summary>
         private ServiceInfo()
         {
         }
@@ -37,11 +40,11 @@ namespace Adnc.Shared.WebApi.Registrar
                 if (startAssembly is null)
                     startAssembly = Assembly.GetEntryAssembly();
 
-                var description = startAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
-                var assemblyName = startAssembly.GetName();
-                var version = assemblyName.Version;
-                var fullName = assemblyName.Name.ToLower();
-                var serviceName = fullName.Replace(".", "-");
+                var description = startAssembly?.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
+                var assemblyName = startAssembly?.GetName();
+                var version = assemblyName?.Version;
+                var fullName = assemblyName?.Name?.ToLower();
+                var serviceName = fullName?.Replace(".", "-");
                 var ticks = DateTime.Now.GetTotalMilliseconds().ToLong();
                 var ticksHex = Convert.ToString(ticks, 16);
                 var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLower();

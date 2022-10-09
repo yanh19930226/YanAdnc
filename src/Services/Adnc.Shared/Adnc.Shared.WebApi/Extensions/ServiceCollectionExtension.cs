@@ -18,12 +18,23 @@ public static class ServiceCollectionExtension
         if (serviceInfo?.StartAssembly is null)
             throw new ArgumentNullException(nameof(serviceInfo));
 
-        var webApiRegistarType = serviceInfo.StartAssembly.ExportedTypes.FirstOrDefault(m => m.IsAssignableTo(typeof(IDependencyRegistrar)) && m.IsNotAbstractClass(true));
+        #region 注册WebApi通用服务
+        var webApiRegistarType = serviceInfo.StartAssembly.ExportedTypes.FirstOrDefault(m => m.IsAssignableTo(typeof(IWebApiRegistrar)) && m.IsNotAbstractClass(true));
         if (webApiRegistarType is null)
-            throw new NullReferenceException(nameof(IDependencyRegistrar));
+            throw new NullReferenceException(nameof(IWebApiRegistrar));
 
-        var webapiRegistar = Activator.CreateInstance(webApiRegistarType, services)  as IDependencyRegistrar;
-        webapiRegistar.AddAdnc();
+        var webapiRegistar = Activator.CreateInstance(webApiRegistarType, services) as IWebApiRegistrar;
+        webapiRegistar?.AddAdncWebApi();
+        #endregion
+
+        #region 注册Appication通用服务
+        var appicationRegistarType = serviceInfo.StartAssembly.ExportedTypes.FirstOrDefault(m => m.IsAssignableTo(typeof(IApplicationRegistrar)) && m.IsNotAbstractClass(true));
+        if (appicationRegistarType is null)
+            throw new NullReferenceException(nameof(IApplicationRegistrar));
+
+        var appicationRegistar = Activator.CreateInstance(appicationRegistarType, services) as IApplicationRegistrar;
+        appicationRegistar?.AddAdncApplication();
+        #endregion
 
         return services;
     }
