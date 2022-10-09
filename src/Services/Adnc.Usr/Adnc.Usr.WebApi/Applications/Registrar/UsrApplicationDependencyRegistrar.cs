@@ -10,9 +10,13 @@ public sealed class UsrApplicationDependencyRegistrar : AbstractApplicationDepen
 {
     public override Assembly ApplicationLayerAssembly => Assembly.GetExecutingAssembly();
 
-    public override Assembly ContractsLayerAssembly => typeof(IUserAppService).Assembly;
+    public override Assembly ContractsLayerAssembly => Assembly.GetExecutingAssembly();
 
-    public override Assembly RepositoryOrDomainLayerAssembly => typeof(EntityInfo).Assembly;
+    public override Assembly RepositoryOrDomainLayerAssembly => Assembly.GetExecutingAssembly();
+
+    //public override Assembly ContractsLayerAssembly => typeof(IUserAppService).Assembly;
+
+    //public override Assembly RepositoryOrDomainLayerAssembly => typeof(EntityInfo).Assembly;
 
     public UsrApplicationDependencyRegistrar(IServiceCollection services) : base(services)
     {
