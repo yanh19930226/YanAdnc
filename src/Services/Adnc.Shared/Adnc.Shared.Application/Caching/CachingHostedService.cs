@@ -35,7 +35,7 @@ public class CachingHostedService : BackgroundService
                     || model.CacheKeys.IsNullOrEmpty()
                     || DateTime.Now > model.ExpireDt)
                 {
-                    await Task.Delay(_cacheProvider.CacheOptions.Value.LockMs, stoppingToken);
+                    await Task.Delay(_cacheProvider.RedisOptions.Value.LockMs, stoppingToken);
                     continue;
                 }
 

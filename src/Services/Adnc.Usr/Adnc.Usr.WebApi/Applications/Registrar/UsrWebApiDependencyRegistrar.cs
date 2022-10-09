@@ -1,5 +1,4 @@
-﻿using Adnc.Shared.Application.Registrar;
-using Adnc.Shared.WebApi.Registrar;
+﻿using Adnc.Shared.WebApi.Registrar;
 using Adnc.Usr.WebApi.Authentication;
 using Adnc.Usr.WebApi.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -9,13 +8,8 @@ namespace Adnc.Usr.WebApi.Registrar;
 
 public sealed class UsrWebApiDependencyRegistrar : AbstractWebApiDependencyRegistrar
 {
-    public UsrWebApiDependencyRegistrar(IServiceCollection services)
-        : base(services)
-    {
-    }
-
-    public UsrWebApiDependencyRegistrar(IApplicationBuilder app)
-        : base(app)
+    public UsrWebApiDependencyRegistrar(IServiceCollection services, IApplicationBuilder app)
+        : base(services, app)
     {
     }
 

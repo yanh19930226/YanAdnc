@@ -1,6 +1,6 @@
 ﻿using Adnc.Infra.Mongo.Extensions;
 using Adnc.Infra.Mongo.Interfaces;
-using Adnc.Infra.Repository.Entities.MongoEntities;
+using Adnc.Infra.Repository.Entities;
 using Adnc.Infra.Repository.IRepositories;
 using Adnc.Infra.Repository.IRepositories.Models;
 using MongoDB.Driver;

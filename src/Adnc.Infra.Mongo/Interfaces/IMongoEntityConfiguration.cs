@@ -1,11 +1,5 @@
 ﻿using Adnc.Infra.Mongo.Configuration;
-using Adnc.Infra.Mongo.Extensions;
-using Adnc.Infra.Repository.Entities.MongoEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Adnc.Infra.Repository.Entities;
 
 namespace Adnc.Infra.Mongo.Interfaces
 {

@@ -1,7 +1,7 @@
 ﻿using Adnc.Infra.Mongo.Configuration;
 using Adnc.Infra.Mongo.Extensions;
 using Adnc.Infra.Mongo.Interfaces;
-using Adnc.Infra.Repository.Entities.MongoEntities;
+using Adnc.Infra.Repository.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;

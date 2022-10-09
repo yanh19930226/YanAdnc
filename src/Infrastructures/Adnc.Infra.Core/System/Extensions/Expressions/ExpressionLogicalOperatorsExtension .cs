@@ -1,4 +1,6 @@
-﻿namespace System.Linq.Expressions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace System.Linq.Expressions
 {
     public static class ExpressionLogicalOperatorsExtension
     {

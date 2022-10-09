@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Extensions.Hosting
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+namespace Microsoft.Extensions.Hosting
 {
     public static class HostExtensions
     {

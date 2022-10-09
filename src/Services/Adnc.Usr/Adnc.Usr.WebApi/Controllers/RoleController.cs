@@ -1,6 +1,8 @@
-﻿using Adnc.Shared.Consts.Permissions.Usr;
+﻿using Adnc.Shared.Application.Contracts.Vos;
+using Adnc.Shared.Consts.Permissions.Usr;
 using Adnc.Shared.WebApi.Authorization;
 using Adnc.Shared.WebApi.Controller;
+using Adnc.Usr.Application.Contracts.Dtos;
 using Adnc.Usr.Application.Contracts.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
