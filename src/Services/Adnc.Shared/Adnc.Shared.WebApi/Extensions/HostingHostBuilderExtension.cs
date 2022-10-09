@@ -12,6 +12,54 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class WebApplicationBuilderExtension
 {
+
+    /// <summary>
+    /// replace placeholder
+    /// </summary>
+    /// <param name="sections"></param>
+    private static void ReplacePlaceholder(IEnumerable<IConfigurationSection> sections)
+    {
+        var serviceInfo = ServiceInfo.GetInstance();
+        foreach (var section in sections)
+        {
+            var childrenSections = section.GetChildren();
+            if (childrenSections.IsNotNullOrEmpty())
+                ReplacePlaceholder(childrenSections);
+
+            if (section.Value.IsNullOrWhiteSpace())
+                continue;
+
+            var sectionValue = section.Value;
+            if (sectionValue.Contains("$SERVICENAME"))
+                section.Value = sectionValue.Replace("$SERVICENAME", serviceInfo.ServiceName);
+
+            if (sectionValue.Contains("$SHORTNAME"))
+                section.Value = sectionValue.Replace("$SHORTNAME", serviceInfo.ShortName);
+        }
+    }
+
+    /// <summary>
+    /// Register Cofiguration ChangeCallback
+    /// </summary>
+    /// <param name="state"></param>
+    private static IDisposable _callbackRegistration;
+
+    /// <summary>
+    /// OnSettingConfigurationChanged
+    /// </summary>
+    /// <param name="state"></param>
+    private static void OnSettingConfigurationChanged(object state)
+    {
+        _callbackRegistration?.Dispose();
+        var configuration = state as IConfiguration;
+        var changedChildren = configuration.GetChildren();
+        var reloadToken = configuration.GetReloadToken();
+
+        ReplacePlaceholder(changedChildren);
+
+        _callbackRegistration = reloadToken.RegisterChangeCallback(OnSettingConfigurationChanged, state);
+    }
+
     /// <summary>
     /// Configure Configuration/ServiceCollection/Logging
     /// <param name="builder"></param>
@@ -54,46 +102,5 @@ public static class WebApplicationBuilderExtension
 
         return builder;
     }
-
-    /// <summary>
-    /// replace placeholder
-    /// </summary>
-    /// <param name="sections"></param>
-    private static void ReplacePlaceholder(IEnumerable<IConfigurationSection> sections)
-    {
-        var serviceInfo = ServiceInfo.GetInstance();
-        foreach (var section in sections)
-        {
-            var childrenSections = section.GetChildren();
-            if (childrenSections.IsNotNullOrEmpty())
-                ReplacePlaceholder(childrenSections);
-
-            if (section.Value.IsNullOrWhiteSpace())
-                continue;
-
-            var sectionValue = section.Value;
-            if (sectionValue.Contains("$SERVICENAME"))
-                section.Value = sectionValue.Replace("$SERVICENAME", serviceInfo.ServiceName);
-
-            if (sectionValue.Contains("$SHORTNAME"))
-                section.Value = sectionValue.Replace("$SHORTNAME", serviceInfo.ShortName);
-        }
-    }
-
-    /// <summary>
-    /// Register Cofiguration ChangeCallback
-    /// </summary>
-    /// <param name="state"></param>
-    private static IDisposable _callbackRegistration;
-    private static void OnSettingConfigurationChanged(object state)
-    {
-        _callbackRegistration?.Dispose();
-        var configuration = state as IConfiguration;
-        var changedChildren = configuration.GetChildren();
-        var reloadToken = configuration.GetReloadToken();
-
-        ReplacePlaceholder(changedChildren);
-
-        _callbackRegistration = reloadToken.RegisterChangeCallback(OnSettingConfigurationChanged, state);
-    }
+    
 }

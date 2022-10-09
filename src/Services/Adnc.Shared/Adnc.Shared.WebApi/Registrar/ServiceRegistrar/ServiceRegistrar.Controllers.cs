@@ -1,10 +1,12 @@
-﻿using Adnc.Infra.Core.Adnc.Json;
+﻿using Adnc.Infra.Core.Adnc.Interfaces;
+using Adnc.Infra.Core.Adnc.Json;
 using Adnc.Infra.Core.System.Extensions.DataTimes;
-using Adnc.Shared.WebApi.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Text.Json;
@@ -12,7 +14,7 @@ using System.Text.Json;
 
 namespace Adnc.Shared.WebApi.Registrar
 {
-    public abstract partial class AbstractWebApiDependencyRegistrar
+    public static partial class ServiceRegistrar
     {
         /// <summary>
         /// Controllers 注册
@@ -20,7 +22,7 @@ namespace Adnc.Shared.WebApi.Registrar
         /// FluentValidation 注册
         /// ApiBehaviorOptions 配置
         /// </summary>
-        protected virtual void AddControllers()
+        public static IServiceCollection AddControllers(this IServiceCollection Services, IConfiguration Configuration, IServiceInfo ServiceInfo)
         {
             Services
                 .AddControllers(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
@@ -73,6 +75,8 @@ namespace Adnc.Shared.WebApi.Registrar
                 });
             //add skyamp
             //_services.AddSkyApmExtensions().AddCaching();
+
+            return Services;
         }
     }
 }

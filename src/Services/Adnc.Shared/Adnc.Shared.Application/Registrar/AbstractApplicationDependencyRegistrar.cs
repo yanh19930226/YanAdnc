@@ -15,12 +15,13 @@ using System.Reflection;
 
 namespace Adnc.Shared.Application.Registrar;
 
-public abstract partial class AbstractApplicationDependencyRegistrar : IDependencyRegistrar
+public abstract partial class AbstractApplicationDependencyRegistrar : IApplicationRegistrar
 {
     public string Name => "application";
     public abstract Assembly ApplicationLayerAssembly { get; }
     public abstract Assembly ContractsLayerAssembly { get; }
     public abstract Assembly RepositoryOrDomainLayerAssembly { get; }
+
     //protected SkyApmExtensions SkyApm { get; init; }
     protected List<AddressNode> RpcAddressInfo { get; init; }
     protected IServiceCollection Services { get; init; }
@@ -49,7 +50,7 @@ public abstract partial class AbstractApplicationDependencyRegistrar : IDependen
     /// <summary>
     /// 注册所有服务
     /// </summary>
-    public abstract void AddAdnc();
+    public abstract void AddAdncApplication();
 
     /// <summary>
     /// 注册adnc.application通用服务
@@ -61,15 +62,15 @@ public abstract partial class AbstractApplicationDependencyRegistrar : IDependen
             .AddAdncInfraAutoMapper(ApplicationLayerAssembly)
             //.AddAdncInfraYitterIdGenerater(RedisSection)
             //.AddAdncInfraConsul(ConsulSection)
-            .AddAdncInfraDapper();
+            .AddAdncInfraDapper()
+        //.AddAppliactionSerivcesWithInterceptors()
+        //.AddApplicaitonHostedServices()
+        .AddEfCoreContextWithRepositories(MysqlSection,ServiceInfo,this.IsDevelopment())
+        .AddMongoContextWithRepositries(MongoDbSection)
+        .AddCaching(RedisSection, ServiceInfo)
+        .AddBloomFilters();
 
         AddApplicationSharedServices();
-        AddAppliactionSerivcesWithInterceptors();
-        AddApplicaitonHostedServices();
-        AddEfCoreContextWithRepositories();
-        AddMongoContextWithRepositries();
-        AddCaching();
-        //AddBloomFilters();
     }
 
     /// <summary>

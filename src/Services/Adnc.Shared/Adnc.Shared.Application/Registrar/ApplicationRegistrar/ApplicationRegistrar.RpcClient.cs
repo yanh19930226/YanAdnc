@@ -1,8 +1,10 @@
 ﻿using Adnc.Infra.Consul.Discover.GrpcResolver;
 using Adnc.Infra.Consul.Discover.Handler;
+using Adnc.Infra.Core.Adnc.Interfaces;
 using Adnc.Infra.Core.Adnc.Json;
 using Adnc.Infra.Core.System.Extensions.String;
 using Adnc.Shared.Consts.RegistrationCenter;
+using Adnc.Shared.Rpc;
 using Adnc.Shared.Rpc.Handlers;
 using Adnc.Shared.Rpc.Handlers.Token;
 using Grpc.Core;
@@ -16,7 +18,7 @@ using Refit;
 
 namespace Adnc.Shared.Application.Registrar;
 
-public abstract partial class AbstractApplicationDependencyRegistrar
+public static partial class ApplicationRegistrar
 {
     /// <summary>
     /// 注册Rest服务(跨微服务之间的同步通讯)
@@ -24,7 +26,7 @@ public abstract partial class AbstractApplicationDependencyRegistrar
     /// <typeparam name="TRestClient">Rpc服务接口</typeparam>
     /// <param name="serviceName">在注册中心注册的服务名称，或者服务的Url</param>
     /// <param name="policies">Polly策略</param>
-    protected virtual void AddRestClient<TRestClient>(string serviceName, List<IAsyncPolicy<HttpResponseMessage>> policies)
+    public static IServiceCollection AddRestClient<TRestClient>(this IServiceCollection Services, IConfiguration Configuration, List<AddressNode> RpcAddressInfo, string serviceName, List<IAsyncPolicy<HttpResponseMessage>> policies)
      where TRestClient : class
     {
         var addressNode = RpcAddressInfo.FirstOrDefault(x => x.Service.EqualsIgnoreCase(serviceName));
@@ -65,8 +67,9 @@ public abstract partial class AbstractApplicationDependencyRegistrar
                     break;
                 }
         }
-    }
 
+        return Services;
+    }
 
     /// <summary>
     /// 注册Grpc服务(跨微服务之间的同步通讯)
@@ -74,7 +77,7 @@ public abstract partial class AbstractApplicationDependencyRegistrar
     /// <typeparam name="TRpcService">Rpc服务接口</typeparam>
     /// <param name="serviceName">在注册中心注册的服务名称，或者服务的Url</param>
     /// <param name="policies">Polly策略</param>
-    protected virtual void AddGrpcClient<TGrpcClient>(string serviceName, List<IAsyncPolicy<HttpResponseMessage>> policies)
+    public static IServiceCollection AddGrpcClient<TGrpcClient>(this IServiceCollection Services, IConfiguration Configuration, List<AddressNode> RpcAddressInfo, string serviceName, List<IAsyncPolicy<HttpResponseMessage>> policies)
      where TGrpcClient : class
     {
         var addressNode = RpcAddressInfo.FirstOrDefault(x => x.Service.EqualsIgnoreCase(serviceName));
@@ -122,6 +125,7 @@ public abstract partial class AbstractApplicationDependencyRegistrar
                      })
                      .AddHttpMessageHandler<TokenDelegatingHandler>()
                      .AddPolicyHandlerICollection(policies);
-    }
 
+        return Services;
+    }
 }

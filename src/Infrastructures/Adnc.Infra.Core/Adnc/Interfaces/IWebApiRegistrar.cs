@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Adnc.Infra.Core.Adnc.Interfaces
 {
-    public interface IDependencyRegistrar
+    public interface IWebApiRegistrar
     {
-        public string Name { get; }
-        public void AddAdnc();
+        public void AddAdncWebApi();
     }
 }

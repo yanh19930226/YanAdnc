@@ -1,23 +1,21 @@
-﻿using Adnc.Shared.WebApi.Authentication;
+﻿using Adnc.Infra.Core.Adnc.Interfaces;
+using Adnc.Shared.WebApi.Authentication;
 using Adnc.Shared.WebApi.Authentication.Basic;
 using Adnc.Shared.WebApi.Authentication.Hybrid;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Adnc.Shared.WebApi.Registrar
 {
-    public abstract partial class AbstractWebApiDependencyRegistrar
+    public static partial class ServiceRegistrar
     {
         /// <summary>
         /// <summary>
         /// 注册身份认证组件
         /// </summary>
-        protected virtual void AddAuthentication<TAuthenticationHandler>()
+        public static IServiceCollection AddAuthentication<TAuthenticationHandler>(this IServiceCollection Services, IConfiguration Configuration, IServiceInfo ServiceInfo)
             where TAuthenticationHandler : AbstractAuthenticationProcessor
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -54,6 +52,8 @@ namespace Adnc.Shared.WebApi.Registrar
                 //    options.Events = JwtSecurityTokenHandlerExtension.GenarateJwtBearerEvents();
                 //})
                 ;
+
+            return Services;
         }
     }
 }

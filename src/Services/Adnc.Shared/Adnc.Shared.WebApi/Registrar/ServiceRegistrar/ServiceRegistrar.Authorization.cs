@@ -1,5 +1,7 @@
-﻿using Adnc.Shared.WebApi.Authorization;
+﻿using Adnc.Infra.Core.Adnc.Interfaces;
+using Adnc.Shared.WebApi.Authorization;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Adnc.Shared.WebApi.Registrar
 {
-    public abstract partial class AbstractWebApiDependencyRegistrar
+    public static partial class ServiceRegistrar
     {
         /// <summary>
         /// 注册授权组件
@@ -17,7 +19,7 @@ namespace Adnc.Shared.WebApi.Registrar
         /// PermissionHandlerLocal  本地授权,adnc.usr走本地授权，其他服务走Rpc授权
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
-        protected virtual void AddAuthorization<TAuthorizationHandler>()
+        public static IServiceCollection AddAuthorization<TAuthorizationHandler>(this IServiceCollection Services, IConfiguration Configuration, IServiceInfo ServiceInfo)
             where TAuthorizationHandler : AbstractPermissionHandler
         {
             Services
@@ -30,6 +32,8 @@ namespace Adnc.Shared.WebApi.Registrar
                         policy.Requirements.Add(new PermissionRequirement());
                     });
                 });
+
+            return Services;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.Text;
+
+namespace Microsoft.AspNetCore.Mvc.ModelBinding;
 
 public static class ModelStateExtensions
 {

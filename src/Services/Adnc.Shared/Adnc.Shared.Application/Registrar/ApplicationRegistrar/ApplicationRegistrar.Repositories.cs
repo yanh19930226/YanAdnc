@@ -9,32 +9,36 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Adnc.Infra.EFCore.Data.MySql;
 using Microsoft.Extensions.Logging;
-
-
+using Adnc.Infra.Core.Adnc.Interfaces;
 
 namespace Adnc.Shared.Application.Registrar;
 
-public abstract partial class AbstractApplicationDependencyRegistrar
+public static partial class ApplicationRegistrar
 {
     /// <summary>
     /// 注册EFCoreContext与仓储
     /// </summary>
-    protected virtual void AddEfCoreContextWithRepositories()
+    public static IServiceCollection AddEfCoreContextWithRepositories(this IServiceCollection Services, IConfigurationSection MysqlSection, IServiceInfo ServiceInfo, bool IsDevelopment)
     {
         var serviceType = typeof(IEntityInfo);
+
+        var RepositoryOrDomainLayerAssembly = ServiceInfo.StartAssembly;
+
         var implType = RepositoryOrDomainLayerAssembly.ExportedTypes.FirstOrDefault(type => type.IsAssignableTo(serviceType) && type.IsNotAbstractClass(true));
         if (implType is null)
             throw new NotImplementedException(nameof(IEntityInfo));
         else
             Services.AddScoped(serviceType, implType);
 
-        AddEfCoreContext();
+        Services.AddEfCoreContext(MysqlSection,ServiceInfo, IsDevelopment);
+
+        return Services;
     }
 
     /// <summary>
     /// 注册EFCoreContext
     /// </summary>
-    protected virtual void AddEfCoreContext()
+    public static IServiceCollection AddEfCoreContext(this IServiceCollection Services, IConfigurationSection MysqlSection, IServiceInfo ServiceInfo, bool IsDevelopment)
     {
         var mysqlConfig = MysqlSection.Get<MysqlConfig>();
         var serverVersion = new MariaDbServerVersion(new Version(10, 5, 4));
@@ -48,7 +52,7 @@ public abstract partial class AbstractApplicationDependencyRegistrar
                                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
             });
 
-            if (this.IsDevelopment())
+            if (IsDevelopment)
             {
                 //options.AddInterceptors(new DefaultDbCommandInterceptor())
                 options.LogTo(Console.WriteLine, LogLevel.Information)
@@ -58,12 +62,14 @@ public abstract partial class AbstractApplicationDependencyRegistrar
             //替换默认查询sql生成器,如果通过mycat中间件实现读写分离需要替换默认SQL工厂。
             //options.ReplaceService<IQuerySqlGeneratorFactory, AdncMySqlQuerySqlGeneratorFactory>();
         });
+
+        return Services;
     }
 
     /// <summary>
     /// 注册MongoContext与仓储
     /// </summary>
-    protected virtual void AddMongoContextWithRepositries(Action<IServiceCollection> action = null)
+    public static IServiceCollection AddMongoContextWithRepositries(this IServiceCollection Services, IConfigurationSection MongoDbSection, Action<IServiceCollection> action = null)
     {
         action?.Invoke(Services);
 
@@ -74,5 +80,7 @@ public abstract partial class AbstractApplicationDependencyRegistrar
             options.PluralizeCollectionNames = mongoConfig.PluralizeCollectionNames;
             options.CollectionNamingConvention = (NamingConvention)mongoConfig.CollectionNamingConvention;
         });
+
+        return Services;
     }
 }

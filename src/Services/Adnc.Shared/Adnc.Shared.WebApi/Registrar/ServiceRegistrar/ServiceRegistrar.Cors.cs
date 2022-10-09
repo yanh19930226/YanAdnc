@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Adnc.Infra.Core.Adnc.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Adnc.Shared.WebApi.Registrar
 {
-    public abstract partial class AbstractWebApiDependencyRegistrar
+    public static partial class ServiceRegistrar
     {
         /// <summary>
         /// 注册跨域组件
         /// </summary>
-        protected virtual void AddCors()
+        public static IServiceCollection AddCors(this IServiceCollection Services, IConfiguration Configuration, IServiceInfo ServiceInfo)
         {
             Services.AddCors(options =>
             {
@@ -27,6 +28,8 @@ namespace Adnc.Shared.WebApi.Registrar
                     .AllowCredentials();
                 });
             });
+
+            return Services;
         }
     }
 
