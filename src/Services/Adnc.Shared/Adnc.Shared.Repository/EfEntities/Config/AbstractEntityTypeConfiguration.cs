@@ -24,7 +24,7 @@ public abstract class AbstractEntityTypeConfiguration<TEntity> : IEntityTypeConf
     protected virtual void ConfigureConcurrency(EntityTypeBuilder<TEntity> builder, Type entityType)
     {
         if (typeof(IConcurrency).IsAssignableFrom(entityType))
-            builder.Property("RowVersion").IsRequired().IsRowVersion().ValueGeneratedOnAddOrUpdate();
+            builder.Property("Version").IsRequired().IsRowVersion().ValueGeneratedOnAddOrUpdate();
     }
 
     protected virtual void ConfigureQueryFilter(EntityTypeBuilder<TEntity> builder, Type entityType)

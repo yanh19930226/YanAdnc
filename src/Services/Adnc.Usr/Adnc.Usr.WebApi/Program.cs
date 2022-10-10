@@ -37,7 +37,7 @@ namespace Adnc.Usr.WebApi
             catch (Exception ex)
             {
                 logger.Error(ex, "Stopped program because of exception");
-                throw;
+                 throw;
             }
             finally
             {

@@ -11,6 +11,6 @@ namespace Adnc.Infra.Repository.Entities
         /// <summary>
         /// 并发控制列
         /// </summary>
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
     }
 }

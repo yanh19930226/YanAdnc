@@ -9,7 +9,7 @@ namespace Adnc.Infra.Repository.Entities
     public class Entity : IEntity<long>, IConcurrency, ICreateAuditInfo, IModifyAuditInfo, ISoftDelete
     {
         public long Id { get; set; }
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
         public bool IsDeleted { get; set; }
         public long? ModifyBy { get; set; }
         public DateTime? ModifyTime { get; set; }

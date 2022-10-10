@@ -125,7 +125,7 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddApplicaitonHostedServices()
             .AddEfCoreContextWithRepositories(MysqlSection, ServiceInfo, this.IsDevelopment())
             .AddMongoContextWithRepositries(MongoDbSection)
-            //.AddCaching(RedisSection, ServiceInfo)
+            .AddCaching(RedisSection, ServiceInfo)
             .AddBloomFilters(ServiceInfo);
 
             AddApplicationSharedServices();
