@@ -1,5 +1,6 @@
 ﻿using Adnc.Shared.Application.Contracts.Dtos.Outputs;
 using System;
+using System.Collections.Generic;
 
 namespace Adnc.Usr.Application.Contracts.Dtos;
 

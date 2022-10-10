@@ -1,5 +1,6 @@
 ﻿using Adnc.Infra.Core.System.Extensions.String;
 using Adnc.Infra.Helper;
+using Adnc.Infra.IdGenerater.Yitter;
 using Adnc.Infra.Repository.IRepositories;
 using Adnc.Shared.Application.BloomFilter;
 using Adnc.Shared.Application.Contracts.Dtos;
@@ -200,9 +201,9 @@ public class UserAppService : AbstractAppService, IUserAppService
                 userInfoDto.Profile.Roles.Add(role.Name);
             }
 
-            var roleMenus = await _menuRepository.GetMenusByRoleIdsAsync(roleIds.ToArray(), true);
-            if (roleMenus.IsNotNullOrEmpty())
-                userInfoDto.Permissions.AddRange(roleMenus.Select(x => x.Url).Distinct());
+            //var roleMenus = await _menuRepository.GetMenusByRoleIdsAsync(roleIds.ToArray(), true);
+            //if (roleMenus.IsNotNullOrEmpty())
+            //    userInfoDto.Permissions.AddRange(roleMenus.Select(x => x.Url).Distinct());
         }
 
         return userInfoDto;

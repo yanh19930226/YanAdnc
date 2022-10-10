@@ -18,7 +18,7 @@ public static class HostExtension
         switch (registeredType)
         {
             case RegisteredTypeConsts.Consul:
-                host.RegisterToConsul(serviceInfo.Id);
+                //host.RegisterToConsul(serviceInfo.Id);
                 break;
             case RegisteredTypeConsts.Nacos:
                 // TODO

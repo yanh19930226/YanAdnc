@@ -3,8 +3,6 @@ using Adnc.Infra.Core.Adnc.Interfaces;
 using Adnc.Infra.Core.System.Extensions.Types;
 using Adnc.Shared.Application.BloomFilter;
 using Adnc.Shared.Application.Caching;
-using Adnc.Shared.Application.Caching.SkyApm;
-using Castle.Core.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

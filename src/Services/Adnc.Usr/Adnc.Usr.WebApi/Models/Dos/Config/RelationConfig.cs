@@ -1,4 +1,8 @@
-﻿namespace Adnc.Usr.Repository.Entities.Config;
+﻿using Adnc.Shared.Repository.EfEntities.Config;
+using Adnc.Usr.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Adnc.Usr.Repository.Entities.Config;
 
 public class RelationConfig : AbstractEntityTypeConfiguration<SysRelation>
 {

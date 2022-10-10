@@ -19,7 +19,7 @@ public static class ApplicationBuilderExtension
             throw new NullReferenceException(nameof(IMiddlewareRegistrar));
 
         var middlewareRegistar = Activator.CreateInstance(middlewareRegistarType, app) as IMiddlewareRegistrar;
-        middlewareRegistar.UseAdnc();
+        middlewareRegistar?.UseAdnc();
 
         return app;
     }

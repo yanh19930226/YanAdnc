@@ -39,14 +39,13 @@ namespace Adnc.Shared.WebApi.Registrar
         public IConfigurationSection MongoDbSection { get; init; }
         public IConfigurationSection ConsulSection { get; init; }
         public IConfigurationSection RabbitMqSection { get; init; }
-
         public readonly IApplicationBuilder App;
 
         /// <summary>
         /// 服务注册与系统配置
         /// </summary>
         /// <param name="services"></param>
-        public AbstractWebApiDependencyRegistrar(IServiceCollection services, IApplicationBuilder app)
+        public AbstractWebApiDependencyRegistrar(IServiceCollection services)
         {
             Services = services ?? throw new ArgumentException("IServiceCollection is null.");
             Configuration = services.GetConfiguration() ?? throw new ArgumentException("Configuration is null.");
@@ -58,6 +57,14 @@ namespace Adnc.Shared.WebApi.Registrar
             RabbitMqSection = Configuration.GetSection(RabbitMqConfig.Name);
             //SkyApm = Services.AddSkyApmExtensions();
             RpcAddressInfo = Configuration.GetSection(Rpc.AddressNode.Name).Get<List<Rpc.AddressNode>>();
+        }
+
+        /// <summary>
+        /// 中间件注册方法
+        /// </summary>
+        /// <param name="app"></param>
+        public AbstractWebApiDependencyRegistrar(IApplicationBuilder app)
+        {
             App = app;
         }
 
@@ -111,14 +118,14 @@ namespace Adnc.Shared.WebApi.Registrar
             Services
             .AddValidatorsFromAssembly(ServiceInfo.StartAssembly, ServiceLifetime.Scoped)
             .AddAdncInfraAutoMapper(ServiceInfo.StartAssembly)
-            //.AddAdncInfraYitterIdGenerater(RedisSection)
+            .AddAdncInfraYitterIdGenerater(RedisSection)
             //.AddAdncInfraConsul(ConsulSection)
             .AddAdncInfraDapper()
             .AddAppliactionSerivcesWithInterceptors(ServiceInfo)
             .AddApplicaitonHostedServices()
             .AddEfCoreContextWithRepositories(MysqlSection, ServiceInfo, this.IsDevelopment())
             .AddMongoContextWithRepositries(MongoDbSection)
-            .AddCaching(RedisSection, ServiceInfo)
+            //.AddCaching(RedisSection, ServiceInfo)
             .AddBloomFilters(ServiceInfo);
 
             AddApplicationSharedServices();
@@ -147,6 +154,7 @@ namespace Adnc.Shared.WebApi.Registrar
 
         #endregion
 
+        #region 中间件入口方法
         /// <summary>
         /// 注册中间件入口方法
         /// </summary>
@@ -177,11 +185,11 @@ namespace Adnc.Shared.WebApi.Registrar
                 .UseRealIp(x => x.HeaderKey = "X-Forwarded-For")
                 .UseCors(serviceInfo.CorsPolicy);
 
-            //if (environment.IsDevelopment())
-            //{
-            //    IdentityModelEventSource.ShowPII = true;
-            //    App.UseMiniProfiler();
-            //}
+            if (environment.IsDevelopment())
+            {
+                IdentityModelEventSource.ShowPII = true;
+                App.UseMiniProfiler();
+            }
 
             App
                 .UseSwagger(c =>
@@ -207,7 +215,7 @@ namespace Adnc.Shared.WebApi.Registrar
                 //})
                 .UseRouting();
 
-                //.UseHttpMetrics();
+            //.UseHttpMetrics();
             //DotNetRuntimeStatsBuilder
             //.Customize()
             //.WithContentionStats()
@@ -228,7 +236,7 @@ namespace Adnc.Shared.WebApi.Registrar
                     //endpoints.MapMetrics();
                     endpoints.MapControllers().RequireAuthorization();
                 });
-        }
-
+        } 
+        #endregion
     }
 }

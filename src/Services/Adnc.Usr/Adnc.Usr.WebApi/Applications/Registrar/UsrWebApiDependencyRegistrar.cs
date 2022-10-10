@@ -6,10 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Adnc.Usr.WebApi.Registrar;
 
-public sealed class UsrWebApiDependencyRegistrar : AbstractWebApiDependencyRegistrar
+public  class UsrWebApiDependencyRegistrar : AbstractWebApiDependencyRegistrar
 {
-    public UsrWebApiDependencyRegistrar(IServiceCollection services, IApplicationBuilder app)
-        : base(services, app)
+    public UsrWebApiDependencyRegistrar(IServiceCollection services)
+        : base(services)
+    {
+    }
+
+    public UsrWebApiDependencyRegistrar(IApplicationBuilder app)
+        : base(app)
     {
     }
 

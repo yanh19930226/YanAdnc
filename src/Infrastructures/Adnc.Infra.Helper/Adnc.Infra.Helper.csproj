@@ -8,9 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Adnc.Infra.Caching\Adnc.Infra.Caching.csproj" />
     <ProjectReference Include="..\Adnc.Infra.Core\Adnc.Infra.Core.csproj" />
   </ItemGroup>
 

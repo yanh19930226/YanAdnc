@@ -62,7 +62,7 @@ public static partial class ApplicationRegistrar
             }
             option.Version = ServiceInfo.Version;
             //默认值：cap.queue.{程序集名称},在 RabbitMQ 中映射到 Queue Names。
-            option.DefaultGroupName = $"cap.{ServiceInfo.ShortName}.{this.GetEnvShortName()}";
+            option.DefaultGroupName = $"cap.{ServiceInfo.ShortName}.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
             //默认值：60 秒,重试 & 间隔
             //在默认情况下，重试将在发送和消费消息失败的 4分钟后 开始，这是为了避免设置消息状态延迟导致可能出现的问题。
             //发送和消费消息的过程中失败会立即重试 3 次，在 3 次以后将进入重试轮询，此时 FailedRetryInterval 配置才会生效。

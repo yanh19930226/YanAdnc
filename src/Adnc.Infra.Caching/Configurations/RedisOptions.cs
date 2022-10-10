@@ -15,7 +15,7 @@ namespace Adnc.Infra.Caching.Configurations
         {
         }
 
-        public RedisDBOptions DBConfig { get; set; } = new RedisDBOptions();
+        
 
         /// <summary>
         /// Gets or sets the max random second.
@@ -54,11 +54,6 @@ namespace Adnc.Infra.Caching.Configurations
         public int LockMs { get; set; } = 5000;
 
         /// <summary>
-        ///Penetration setting
-        /// </summary>
-        public PenetrationOptions PenetrationSetting { get; set; }
-
-        /// <summary>
         /// Gets or sets the serializer name that should be use in this provider.
         /// Mainly for distributed cache
         /// </summary>
@@ -68,6 +63,15 @@ namespace Adnc.Infra.Caching.Configurations
         /// polly timeout seconds
         /// </summary>
         public int PollyTimeoutSeconds { get; set; } = 11;
+
+        public RedisDBOptions DBConfig { get; set; } = new RedisDBOptions();
+
+        /// <summary>
+        ///Penetration setting
+        /// </summary>
+        public PenetrationOptions PenetrationSetting { get; set; }
+
+        
 
         public sealed class PenetrationOptions
         {

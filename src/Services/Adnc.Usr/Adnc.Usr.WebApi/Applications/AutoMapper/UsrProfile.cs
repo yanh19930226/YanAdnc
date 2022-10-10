@@ -33,7 +33,7 @@ public sealed class UsrProfile : Profile
         CreateMap<SysDept, DeptDto>();
         CreateMap<SysDept, DeptTreeDto>();
 
-        CreateMap<LoginRequest, UserLoginDto>();
-        CreateMap<DeptTreeDto, DeptReply>();
+        //CreateMap<LoginRequest, UserLoginDto>();
+        //CreateMap<DeptTreeDto, DeptReply>();
     }
 }
