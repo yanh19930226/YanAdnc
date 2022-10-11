@@ -99,8 +99,6 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddCors(Configuration, ServiceInfo)
             .AddSwaggerGen(Configuration, ServiceInfo)
             .AddMiniProfiler(Configuration, ServiceInfo);
-
-
         }
         #endregion
 
@@ -118,7 +116,7 @@ namespace Adnc.Shared.WebApi.Registrar
             Services
             .AddValidatorsFromAssembly(ServiceInfo.StartAssembly, ServiceLifetime.Scoped)
             .AddAdncInfraAutoMapper(ServiceInfo.StartAssembly)
-            .AddAdncInfraYitterIdGenerater(RedisSection)
+            //.AddAdncInfraYitterIdGenerater(RedisSection)
             //.AddAdncInfraConsul(ConsulSection)
             .AddAdncInfraDapper()
             .AddAppliactionSerivcesWithInterceptors(ServiceInfo)
@@ -127,7 +125,6 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddMongoContextWithRepositries(MongoDbSection)
             .AddCaching(RedisSection, ServiceInfo)
             .AddBloomFilters(ServiceInfo);
-
             AddApplicationSharedServices();
         }
 
@@ -173,7 +170,7 @@ namespace Adnc.Shared.WebApi.Registrar
             ServiceLocator.Provider = App.ApplicationServices;
             var environment = App.ApplicationServices.GetService<IHostEnvironment>();
             var serviceInfo = App.ApplicationServices.GetService<IServiceInfo>();
-            var consulOptions = App.ApplicationServices.GetService<IOptions<ConsulConfig>>();
+            //var consulOptions = App.ApplicationServices.GetService<IOptions<ConsulConfig>>();
 
             var defaultFilesOptions = new DefaultFilesOptions();
             defaultFilesOptions.DefaultFileNames.Clear();
@@ -233,7 +230,9 @@ namespace Adnc.Shared.WebApi.Registrar
                 .UseEndpoints(endpoints =>
                 {
                     endpointRoute?.Invoke(endpoints);
+
                     //endpoints.MapMetrics();
+                    //endpoints.MapControllers();
                     endpoints.MapControllers().RequireAuthorization();
                 });
         } 

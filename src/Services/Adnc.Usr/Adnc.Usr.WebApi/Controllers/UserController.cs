@@ -7,6 +7,7 @@ using Adnc.Shared.WebApi.Controller;
 using Adnc.Usr.Application.Contracts.Services;
 using Adnc.Usr.WebApi.Models.Dtos.Users;
 using Adnc.Usr.WebApi.Models.Vos.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -143,4 +144,16 @@ public class UserController : AdncControllerBase
     [HttpGet("current")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<UserInfoVo>> GetCurrentUserInfoAsync() => await _userService.GetUserInfoAsync(_userContext.Id);
+
+    /// <summary>
+    /// test
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("test")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    public string Test() 
+    {
+        return "test";
+    }
 }

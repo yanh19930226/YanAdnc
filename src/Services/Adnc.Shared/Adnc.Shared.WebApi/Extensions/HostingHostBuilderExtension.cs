@@ -97,7 +97,7 @@ public static class WebApplicationBuilderExtension
         //Logging
         builder.Logging.ClearProviders();
         var logContainer = builder.Configuration.GetValue("Logging:LogContainer", "console");
-        //LogManager.LoadConfiguration($"{AppContext.BaseDirectory}/NLog/nlog-{logContainer}.config");
+        LogManager.LoadConfiguration($"{AppContext.BaseDirectory}/NLog/nlog-{logContainer}.config");
         builder.Host.UseNLog();
 
         return builder;
