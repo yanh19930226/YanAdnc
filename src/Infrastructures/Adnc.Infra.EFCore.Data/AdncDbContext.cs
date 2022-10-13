@@ -64,5 +64,10 @@ namespace Adnc.Infra.EfCore.MySQL
 
             return ChangeTracker.Entries<Entity>().Count();
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
     }
 }

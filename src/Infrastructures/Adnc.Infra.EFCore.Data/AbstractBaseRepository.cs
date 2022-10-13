@@ -24,16 +24,16 @@ namespace Adnc.Infra.EFCore.Data
 
         protected virtual IQueryable<TEntity> GetDbSet(bool writeDb, bool noTracking)
         {
-            //不跟踪并且写入数据库
-            if (noTracking && writeDb)
-                return DbContext.Set<TEntity>().AsNoTracking().TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
-            //不跟踪
-            else if (noTracking)
-                return DbContext.Set<TEntity>().AsNoTracking();
-            //只写入
-            else if (writeDb)
-                return DbContext.Set<TEntity>().TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
-            else
+            ////不跟踪并且写入数据库
+            //if (noTracking && writeDb)
+            //    return DbContext.Set<TEntity>().AsNoTracking().TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
+            ////不跟踪
+            //else if (noTracking)
+            //    return DbContext.Set<TEntity>().AsNoTracking();
+            ////只写入
+            //else if (writeDb)
+            //    return DbContext.Set<TEntity>().TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
+            //else
                 return DbContext.Set<TEntity>();
         }
 
@@ -56,16 +56,16 @@ namespace Adnc.Infra.EFCore.Data
         public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> whereExpression, bool writeDb = false, CancellationToken cancellationToken = default)
         {
             var dbSet = DbContext.Set<TEntity>().AsNoTracking();
-            if (writeDb)
-                dbSet = dbSet.TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
+            //if (writeDb)
+            //    dbSet = dbSet.TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
             return await EntityFrameworkQueryableExtensions.AnyAsync(dbSet, whereExpression, cancellationToken);
         }
 
         public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> whereExpression, bool writeDb = false, CancellationToken cancellationToken = default)
         {
             var dbSet = DbContext.Set<TEntity>().AsNoTracking();
-            if (writeDb)
-                dbSet = dbSet.TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
+            //if (writeDb)
+            //    dbSet = dbSet.TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
             return await EntityFrameworkQueryableExtensions.CountAsync(dbSet, whereExpression, cancellationToken);
         }
 
@@ -164,8 +164,8 @@ namespace Adnc.Infra.EFCore.Data
         public virtual IQueryable<TEntity> GetAll(bool writeDb = false, bool noTracking = true)
         {
             var queryAble = DbContext.Set<TEntity>().AsQueryable();
-            if (writeDb)
-                queryAble = queryAble.TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
+            //if (writeDb)
+            //    queryAble = queryAble.TagWith(RepositoryConsts.MAXSCALE_ROUTE_TO_MASTER);
             if (noTracking)
                 queryAble = queryAble.AsNoTracking();
             return queryAble;

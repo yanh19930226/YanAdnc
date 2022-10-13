@@ -173,7 +173,7 @@ namespace Adnc.Shared.WebApi.Registrar
             ServiceLocator.Provider = App.ApplicationServices;
             var environment = App.ApplicationServices.GetService<IHostEnvironment>();
             var serviceInfo = App.ApplicationServices.GetService<IServiceInfo>();
-            var consulOptions = App.ApplicationServices.GetService<IOptions<ConsulConfig>>();
+            //var consulOptions = App.ApplicationServices.GetService<IOptions<ConsulConfig>>();
 
             var defaultFilesOptions = new DefaultFilesOptions();
             defaultFilesOptions.DefaultFileNames.Clear();
@@ -187,8 +187,8 @@ namespace Adnc.Shared.WebApi.Registrar
 
             if (environment.IsDevelopment())
             {
-                IdentityModelEventSource.ShowPII = true;
-                App.UseMiniProfiler();
+                //IdentityModelEventSource.ShowPII = true;
+                //App.UseMiniProfiler();
             }
 
             App
