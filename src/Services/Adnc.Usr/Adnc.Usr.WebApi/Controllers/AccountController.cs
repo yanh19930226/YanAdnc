@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NSwag.Annotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace Adnc.Usr.WebApi.Controllers;
 /// 认证服务
 /// </summary>
 [Route("auth/session")]
-[ApiController]
+[OpenApiTag("认证接口", Description = "认证接口")]
 public class AccountController : AdncControllerBase
 {
     private readonly IOptions<JwtConfig> _jwtOptions;
@@ -51,6 +52,7 @@ public class AccountController : AdncControllerBase
     public async Task<ActionResult<UserTokenInfoDto>> LoginAsync([FromBody] UserLoginDto input)
     {
         var result = await _accountService.LoginAsync(input);
+
         if (result.IsSuccess)
         {
             var validatedInfo = result.Content;
@@ -59,6 +61,7 @@ public class AccountController : AdncControllerBase
             var tokenInfo = new UserTokenInfoDto(accessToken.Token, accessToken.Expire, refreshToken.Token, refreshToken.Expire);
             return Created($"/auth/session", tokenInfo);
         }
+
         return Problem(result.ProblemDetails);
     }
 

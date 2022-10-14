@@ -6,6 +6,7 @@ using Adnc.Usr.Application.Contracts.Dtos;
 using Adnc.Usr.Application.Contracts.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using System.Threading.Tasks;
 
 namespace Adnc.Usr.WebApi.Controllers;
@@ -14,7 +15,7 @@ namespace Adnc.Usr.WebApi.Controllers;
 /// 角色
 /// </summary>
 [Route("usr/roles")]
-[ApiController]
+[OpenApiTag("角色接口", Description = "角色接口")]
 public class RoleController : AdncControllerBase
 {
     private readonly IRoleAppService _roleService;

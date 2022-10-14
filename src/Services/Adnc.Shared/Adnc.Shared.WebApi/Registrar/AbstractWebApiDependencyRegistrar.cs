@@ -97,8 +97,8 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddAuthentication<TAuthenticationProcessor>(Configuration, ServiceInfo)
             .AddAuthorization<TAuthorizationHandler>(Configuration, ServiceInfo)
             .AddCors(Configuration, ServiceInfo)
-            .AddSwaggerGen(Configuration, ServiceInfo)
-            .AddMiniProfiler(Configuration, ServiceInfo);
+            .AddSwagger(ServiceInfo);
+            //.AddMiniProfiler(Configuration, ServiceInfo);
         }
         #endregion
 
@@ -185,25 +185,12 @@ namespace Adnc.Shared.WebApi.Registrar
             if (environment.IsDevelopment())
             {
                 IdentityModelEventSource.ShowPII = true;
-                App.UseMiniProfiler();
+                //App.UseMiniProfiler();
             }
 
-            App
-                .UseSwagger(c =>
-                {
-                    c.RouteTemplate = $"/{serviceInfo.ShortName}/swagger/{{documentName}}/swagger.json";
-                    c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                    {
-                        swaggerDoc.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"/", Description = serviceInfo.Description } };
-                    });
-                })
-                .UseSwaggerUI(c =>
-                {
-                    var assembly = serviceInfo.StartAssembly;
-                    c.IndexStream = () => assembly.GetManifestResourceStream($"{assembly.GetName().Name}.swagger_miniprofiler.html");
-                    c.SwaggerEndpoint($"/{serviceInfo.ShortName}/swagger/{serviceInfo.Version}/swagger.json", $"{serviceInfo.ServiceName}-{serviceInfo.Version}");
-                    c.RoutePrefix = $"{serviceInfo.ShortName}";
-                })
+            App.UseOpenApi();
+
+            App.UseSwaggerUi3()
                 //.UseHealthChecks($"/{consulOptions.Value.HealthCheckUrl}", new HealthCheckOptions()
                 //{
                 //    Predicate = _ => true,

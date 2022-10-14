@@ -5,12 +5,14 @@ using Adnc.Shared.Consts.Permissions.Usr;
 using Adnc.Shared.WebApi.Authorization;
 using Adnc.Shared.WebApi.Controller;
 using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.Entities;
 using Adnc.Usr.WebApi.Models.Dtos.Users;
 using Adnc.Usr.WebApi.Models.Vos.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NSwag.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,7 +22,7 @@ namespace Adnc.Usr.WebApi.Controllers;
 /// 用户管理
 /// </summary>
 [Route("usr/users")]
-[ApiController]
+[OpenApiTag("用户接口", Description = "用户接口")]
 public class UserController : AdncControllerBase
 {
     private readonly IUserAppService _userService;
@@ -152,8 +154,8 @@ public class UserController : AdncControllerBase
     [HttpGet("test")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public string Test() 
+    public ActionResult<List<SysUser>> Test() 
     {
-        return "test";
+        return _userService.GetUserTestAsync();
     }
 }
