@@ -4,6 +4,7 @@ using Adnc.Shared.Application.Contracts.Interfaces;
 using Adnc.Shared.Application.Contracts.ResultModels;
 using Adnc.Shared.Application.Contracts.Vos;
 using Adnc.Shared.Consts.Caching.Usr;
+using Adnc.Usr.Entities;
 using Adnc.Usr.WebApi.Models.Dtos.Users;
 using Adnc.Usr.WebApi.Models.Vos.Users;
 using System.Collections.Generic;
@@ -97,5 +98,11 @@ namespace Adnc.Usr.Application.Contracts.Services
         /// <param name="id"></param>
         /// <returns></returns>
         Task<UserInfoVo> GetUserInfoAsync(long id);
+
+        /// <summary>
+        /// GetUserTestAsync
+        /// </summary>
+        /// <returns></returns>
+        List<SysUser> GetUserTestAsync();
     }
 }

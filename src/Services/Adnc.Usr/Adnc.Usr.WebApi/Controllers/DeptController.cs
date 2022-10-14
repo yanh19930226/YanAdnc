@@ -5,6 +5,7 @@ using Adnc.Usr.Application.Contracts.Dtos;
 using Adnc.Usr.Application.Contracts.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace Adnc.Usr.WebApi.Controllers;
 /// 部门
 /// </summary>
 [Route("usr/depts")]
-[ApiController]
+[OpenApiTag("部门接口", Description = "部门接口")]
 public class DeptController : AdncControllerBase
 {
     private readonly IDeptAppService _deptService;

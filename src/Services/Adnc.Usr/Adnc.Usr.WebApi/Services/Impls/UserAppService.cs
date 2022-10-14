@@ -208,4 +208,11 @@ public class UserAppService : AbstractAppService, IUserAppService
 
         return userInfoDto;
     }
+
+    public List<SysUser> GetUserTestAsync()
+    {
+        var users =  _userRepository.GetAll().ToList();
+
+        return users;
+    }
 }

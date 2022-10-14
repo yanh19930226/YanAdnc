@@ -69,15 +69,28 @@ public sealed class CacheService : AbstractCacheService, ICachePreheatable
 
     internal async Task<List<DeptDto>> GetAllDeptsFromCacheAsync()
     {
-        var cahceValue = await CacheProvider.Value.GetAsync(CachingConsts.DetpListCacheKey, async () =>
+        try
         {
-            using var scope = ServiceProvider.Value.CreateScope();
-            var deptRepository = scope.ServiceProvider.GetRequiredService<IBaseRepository<SysDept>>();
-            var allDepts = await deptRepository.GetAll(writeDb: true).OrderBy(x => x.Ordinal).ToListAsync();
-            return Mapper.Value.Map<List<DeptDto>>(allDepts);
-        }, TimeSpan.FromSeconds(CachingConsts.OneYear));
+            var cahceValue = await CacheProvider.Value.GetAsync(CachingConsts.DetpListCacheKey, async () =>
+            {
+                using var scope = ServiceProvider.Value.CreateScope();
 
-        return cahceValue.Value;
+                var deptRepository = scope.ServiceProvider.GetRequiredService<IBaseRepository<SysDept>>();
+
+                var allDepts = await deptRepository.GetAll(writeDb: true).OrderBy(x => x.Ordinal).ToListAsync();
+
+                var depts = Mapper.Value.Map<List<DeptDto>>(allDepts);
+
+                return depts;
+
+            }, TimeSpan.FromSeconds(CachingConsts.OneYear));
+
+            return cahceValue.Value;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     internal async Task<List<RelationDto>> GetAllRelationsFromCacheAsync()

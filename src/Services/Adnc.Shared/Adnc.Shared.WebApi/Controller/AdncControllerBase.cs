@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Adnc.Shared.WebApi.Controller
 {
+    [ApiController]
     public abstract class AdncControllerBase : ControllerBase
     {
         /// <summary>

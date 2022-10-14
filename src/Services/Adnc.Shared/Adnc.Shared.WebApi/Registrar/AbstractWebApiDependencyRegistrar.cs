@@ -97,10 +97,9 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddAuthentication<TAuthenticationProcessor>(Configuration, ServiceInfo)
             .AddAuthorization<TAuthorizationHandler>(Configuration, ServiceInfo)
             .AddCors(Configuration, ServiceInfo)
-            .AddSwaggerGen(Configuration, ServiceInfo)
+            .AddSwagger(ServiceInfo)
+            //.AddSwaggerGen(ServiceInfo)
             .AddMiniProfiler(Configuration, ServiceInfo);
-
-
         }
         #endregion
 
@@ -118,7 +117,7 @@ namespace Adnc.Shared.WebApi.Registrar
             Services
             .AddValidatorsFromAssembly(ServiceInfo.StartAssembly, ServiceLifetime.Scoped)
             .AddAdncInfraAutoMapper(ServiceInfo.StartAssembly)
-            .AddAdncInfraYitterIdGenerater(RedisSection)
+            //.AddAdncInfraYitterIdGenerater(RedisSection)
             //.AddAdncInfraConsul(ConsulSection)
             .AddAdncInfraDapper()
             .AddAppliactionSerivcesWithInterceptors(ServiceInfo)
@@ -127,7 +126,6 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddMongoContextWithRepositries(MongoDbSection)
             .AddCaching(RedisSection, ServiceInfo)
             .AddBloomFilters(ServiceInfo);
-
             AddApplicationSharedServices();
         }
 
@@ -178,6 +176,8 @@ namespace Adnc.Shared.WebApi.Registrar
             var defaultFilesOptions = new DefaultFilesOptions();
             defaultFilesOptions.DefaultFileNames.Clear();
             defaultFilesOptions.DefaultFileNames.Add("index.html");
+
+
             App
                 .UseDefaultFiles(defaultFilesOptions)
                 .UseStaticFiles()
@@ -191,22 +191,11 @@ namespace Adnc.Shared.WebApi.Registrar
                 //App.UseMiniProfiler();
             }
 
-            App
-                .UseSwagger(c =>
-                {
-                    c.RouteTemplate = $"/{serviceInfo.ShortName}/swagger/{{documentName}}/swagger.json";
-                    c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                    {
-                        swaggerDoc.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"/", Description = serviceInfo.Description } };
-                    });
-                })
-                .UseSwaggerUI(c =>
-                {
-                    var assembly = serviceInfo.StartAssembly;
-                    c.IndexStream = () => assembly.GetManifestResourceStream($"{assembly.GetName().Name}.swagger_miniprofiler.html");
-                    c.SwaggerEndpoint($"/{serviceInfo.ShortName}/swagger/{serviceInfo.Version}/swagger.json", $"{serviceInfo.ServiceName}-{serviceInfo.Version}");
-                    c.RoutePrefix = $"{serviceInfo.ShortName}";
-                })
+            App.UseOpenApi()
+               .UseSwaggerUi3(options =>
+               {
+                   options.SetSpanEditable();
+               })
                 //.UseHealthChecks($"/{consulOptions.Value.HealthCheckUrl}", new HealthCheckOptions()
                 //{
                 //    Predicate = _ => true,
@@ -233,7 +222,9 @@ namespace Adnc.Shared.WebApi.Registrar
                 .UseEndpoints(endpoints =>
                 {
                     endpointRoute?.Invoke(endpoints);
+
                     //endpoints.MapMetrics();
+                    //endpoints.MapControllers();
                     endpoints.MapControllers().RequireAuthorization();
                 });
         } 

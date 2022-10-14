@@ -25,6 +25,7 @@ public static class ServiceCollectionExtension
 
         var webapiRegistar = Activator.CreateInstance(webApiRegistarType, services) as IWebApiRegistrar;
         webapiRegistar?.AddAdncWebApi();
+
         #endregion
 
         #region 注册Appication通用服务

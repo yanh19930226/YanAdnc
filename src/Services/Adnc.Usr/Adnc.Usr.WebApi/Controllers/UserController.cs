@@ -5,11 +5,14 @@ using Adnc.Shared.Consts.Permissions.Usr;
 using Adnc.Shared.WebApi.Authorization;
 using Adnc.Shared.WebApi.Controller;
 using Adnc.Usr.Application.Contracts.Services;
+using Adnc.Usr.Entities;
 using Adnc.Usr.WebApi.Models.Dtos.Users;
 using Adnc.Usr.WebApi.Models.Vos.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NSwag.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,7 +22,7 @@ namespace Adnc.Usr.WebApi.Controllers;
 /// 用户管理
 /// </summary>
 [Route("usr/users")]
-[ApiController]
+[OpenApiTag("用户接口", Description = "用户接口")]
 public class UserController : AdncControllerBase
 {
     private readonly IUserAppService _userService;
@@ -42,6 +45,7 @@ public class UserController : AdncControllerBase
     /// <param name="input">用户信息</param>
     /// <returns></returns>
     [HttpPost]
+    [ApiVersion("1.0")]
     [AdncAuthorize(PermissionConsts.User.Create)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<long>> CreateAsync([FromBody] UserCreationDto input)
@@ -54,6 +58,7 @@ public class UserController : AdncControllerBase
     /// <param name="input">用户信息</param>
     /// <returns></returns>
     [HttpPut("{id}")]
+    [ApiVersion("1.0")]
     [AdncAuthorize(PermissionConsts.User.Update)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> UpdateAsync([FromRoute] long id, [FromBody] UserUpdationDto input)
@@ -65,6 +70,7 @@ public class UserController : AdncControllerBase
     /// <param name="id">用户ID</param>
     /// <returns></returns>
     [HttpDelete("{id}")]
+    [ApiVersion("1.0")]
     [AdncAuthorize(PermissionConsts.User.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteAsync([FromRoute] long id)
@@ -77,6 +83,7 @@ public class UserController : AdncControllerBase
     /// <param name="roleIds">角色</param>
     /// <returns></returns>
     [HttpPut("{id}/roles")]
+    [ApiVersion("1.0")]
     [AdncAuthorize(PermissionConsts.User.SetRole)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> SetRoleAsync([FromRoute] long id, [FromBody] long[] roleIds)
@@ -89,6 +96,7 @@ public class UserController : AdncControllerBase
     /// <param name="status">状态</param>
     /// <returns></returns>
     [HttpPut("{id}/status")]
+    [ApiVersion("1.0")]
     [AdncAuthorize(PermissionConsts.User.ChangeStatus)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> ChangeStatus([FromRoute] long id, [FromBody] SimpleDto<int> status)
@@ -100,6 +108,7 @@ public class UserController : AdncControllerBase
     /// <param name="input">用户Ids与状态</param>
     /// <returns></returns>
     [HttpPut("batch/status")]
+    [ApiVersion("1.0")]
     [AdncAuthorize(PermissionConsts.User.ChangeStatus)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> ChangeStatus([FromBody] UserChangeStatusDto input)
@@ -113,6 +122,7 @@ public class UserController : AdncControllerBase
     /// <param name="userBelongsRoleIds"></param>
     /// <returns></returns>
     [HttpGet("{id}/permissions")]
+    [ApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<string>>> GetCurrenUserPermissions([FromRoute] long id, [FromQuery] IEnumerable<string> requestPermissions, [FromQuery] string userBelongsRoleIds)
     {
@@ -131,6 +141,7 @@ public class UserController : AdncControllerBase
     /// <param name="search">查询条件</param>
     /// <returns></returns>
     [HttpGet()]
+    [ApiVersion("1.0")]
     [AdncAuthorize(PermissionConsts.User.GetList)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<PageModelDto<UserVo>>> GetPagedAsync([FromQuery] UserSearchPagedDto search)
@@ -141,6 +152,21 @@ public class UserController : AdncControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("current")]
+    [ApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<UserInfoVo>> GetCurrentUserInfoAsync() => await _userService.GetUserInfoAsync(_userContext.Id);
+
+    /// <summary>
+    /// test
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("test")]
+    [AllowAnonymous]
+    [ApiVersion("2.0")]
+    //[ApiExplorerSettings(IgnoreApi = true)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public ActionResult<List<SysUser>> Test() 
+    {
+        return _userService.GetUserTestAsync();
+    }
 }

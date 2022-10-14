@@ -7,6 +7,7 @@ using Adnc.Usr.Application.Contracts.Dtos;
 using Adnc.Usr.Application.Contracts.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Adnc.Usr.WebApi.Controllers;
 /// 菜单管理
 /// </summary>
 [Route("usr/menus")]
-[ApiController]
+[OpenApiTag("菜单接口", Description = "菜单接口")]
 public class MenuController : AdncControllerBase
 {
     private readonly IMenuAppService _menuService;

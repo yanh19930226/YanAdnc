@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
+ 
 
   <ItemGroup>
     <ProjectReference Include="..\..\Adnc.Shared\Adnc.Shared.Application\Adnc.Shared.Application.csproj" />
     <ProjectReference Include="..\..\Adnc.Shared\Adnc.Shared.WebApi\Adnc.Shared.WebApi.csproj" />
   </ItemGroup>
-
 </Project>
