@@ -97,8 +97,9 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddAuthentication<TAuthenticationProcessor>(Configuration, ServiceInfo)
             .AddAuthorization<TAuthorizationHandler>(Configuration, ServiceInfo)
             .AddCors(Configuration, ServiceInfo)
-            .AddSwagger(ServiceInfo);
-            //.AddMiniProfiler(Configuration, ServiceInfo);
+            .AddSwagger(ServiceInfo)
+            //.AddSwaggerGen(ServiceInfo)
+            .AddMiniProfiler(Configuration, ServiceInfo);
         }
         #endregion
 
@@ -175,6 +176,8 @@ namespace Adnc.Shared.WebApi.Registrar
             var defaultFilesOptions = new DefaultFilesOptions();
             defaultFilesOptions.DefaultFileNames.Clear();
             defaultFilesOptions.DefaultFileNames.Add("index.html");
+
+
             App
                 .UseDefaultFiles(defaultFilesOptions)
                 .UseStaticFiles()
@@ -185,12 +188,14 @@ namespace Adnc.Shared.WebApi.Registrar
             if (environment.IsDevelopment())
             {
                 IdentityModelEventSource.ShowPII = true;
-                //App.UseMiniProfiler();
+                App.UseMiniProfiler();
             }
 
-            App.UseOpenApi();
-
-            App.UseSwaggerUi3()
+            App.UseOpenApi()
+               .UseSwaggerUi3(options =>
+               {
+                   options.SetSpanEditable();
+               })
                 //.UseHealthChecks($"/{consulOptions.Value.HealthCheckUrl}", new HealthCheckOptions()
                 //{
                 //    Predicate = _ => true,

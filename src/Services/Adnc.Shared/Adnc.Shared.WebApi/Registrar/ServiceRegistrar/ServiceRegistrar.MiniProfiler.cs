@@ -16,7 +16,11 @@ namespace Adnc.Shared.WebApi.Registrar
         /// </summary>
         public static IServiceCollection AddMiniProfiler(this IServiceCollection Services, IConfiguration Configuration, IServiceInfo ServiceInfo) {
             Services
-                .AddMiniProfiler(options => options.RouteBasePath = $"/{ServiceInfo.ShortName}/profiler")
+                .AddMiniProfiler(
+                options => 
+                       //options.RouteBasePath = $"/{ServiceInfo.ShortName}/profiler
+                       options.RouteBasePath = "/profiler"
+                )
                 .AddEntityFramework();
             return Services;
         }
