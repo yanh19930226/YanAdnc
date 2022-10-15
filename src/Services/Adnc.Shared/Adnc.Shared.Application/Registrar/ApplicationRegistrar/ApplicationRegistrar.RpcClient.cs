@@ -35,7 +35,7 @@ public static partial class ApplicationRegistrar
 
         Services.TryAddScoped<CacheDelegatingHandler>();
         Services.TryAddScoped<TokenDelegatingHandler>();
-        Services.TryAddScoped<ConsulDiscoverDelegatingHandler>();
+        //Services.TryAddScoped<ConsulDiscoverDelegatingHandler>();
         Services.TryAddScoped<TokenFactory>();
 
         var registeredType = Configuration.GetRegisteredType().ToLower();

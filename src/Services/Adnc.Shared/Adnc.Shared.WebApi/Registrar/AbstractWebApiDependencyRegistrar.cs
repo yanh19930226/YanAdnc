@@ -52,9 +52,9 @@ namespace Adnc.Shared.WebApi.Registrar
             MongoDbSection = Configuration.GetSection(MongoConfig.Name);
             MysqlSection = Configuration.GetSection(MysqlConfig.Name);
             ConsulSection = Configuration.GetSection(ConsulConfig.Name);
+            RpcAddressInfo = Configuration.GetSection(Rpc.AddressNode.Name).Get<List<Rpc.AddressNode>>();
             RabbitMqSection = Configuration.GetSection(RabbitMqConfig.Name);
             //SkyApm = Services.AddSkyApmExtensions();
-            RpcAddressInfo = Configuration.GetSection(Rpc.AddressNode.Name).Get<List<Rpc.AddressNode>>();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Adnc.Shared.WebApi.Registrar
             Services
             .AddValidatorsFromAssembly(ServiceInfo.StartAssembly, ServiceLifetime.Scoped)
             .AddAdncInfraAutoMapper(ServiceInfo.StartAssembly)
-            //.AddAdncInfraYitterIdGenerater(RedisSection)
+            .AddAdncInfraYitterIdGenerater(RedisSection)
             //.AddAdncInfraConsul(ConsulSection)
             .AddAdncInfraDapper()
             .AddAppliactionSerivcesWithInterceptors(ServiceInfo)
