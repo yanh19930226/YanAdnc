@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NJsonSchema.Generation;
+using NSwag.AspNetCore;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Adnc.Shared.WebApi.Registrar
         /// 设置Span为可编辑
         /// </summary>
         /// <param name="swaggerUIOptions"></param>
-        public static void SetSpanEditable(this NSwag.AspNetCore.SwaggerUi3Settings swaggerUIOptions)
+        public static void SetSpanEditable(this SwaggerUi3Settings swaggerUIOptions)
         {
             StringBuilder stringBuilder = new StringBuilder(swaggerUIOptions.CustomHeadContent);
             stringBuilder.Append(@"
@@ -61,30 +62,6 @@ namespace Adnc.Shared.WebApi.Registrar
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            #region MyRegion
-            //services.AddOpenApiDocument(settings =>
-            //{
-            //    settings.DocumentName = "v1";
-            //    settings.SchemaProcessors.Add(new MySchemaProcessor());
-            //    //可以设置从注释文件加载，但是加载的内容可被OpenApiTagAttribute特性覆盖
-            //    settings.UseControllerSummaryAsTagDescription = true;
-            //    settings.PostProcess = document =>
-            //    {
-            //        document.Info.Version = ServiceInfo.Version;
-            //        document.Info.Title = ServiceInfo.ServiceName;
-            //        document.Info.Description = ServiceInfo.Description;
-            //        document.Info.TermsOfService = ServiceInfo.Description;
-            //    };
-            //    settings.AddSecurity("身份认证Token", Enumerable.Empty<string>(), new NSwag.OpenApiSecurityScheme()
-            //    {
-            //        Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）",
-            //        Name = "Authorization",
-            //        In = NSwag.OpenApiSecurityApiKeyLocation.Header,
-            //        Type = NSwag.OpenApiSecuritySchemeType.ApiKey
-            //    });
-            //}).AddFluentValidationRulesToSwagger(); 
-            #endregion
-
             services.AddApiVersioning(option =>
             {
                 // 可选，为true时API返回支持的版本信息
@@ -109,33 +86,8 @@ namespace Adnc.Shared.WebApi.Registrar
             //遍历版本信息给不同版本添加NSwag支持，如果只写一个就只有一份
             foreach (var description in provider.ApiVersionDescriptions)
             {
-                #region MyRegion
-                ////添加NSwag
-                //services.AddOpenApiDocument(settings =>
-                //{
-                //    settings.DocumentName = "v1";
-                //    settings.SchemaProcessors.Add(new MySchemaProcessor());
-                //    //可以设置从注释文件加载，但是加载的内容可被OpenApiTagAttribute特性覆盖
-                //    settings.UseControllerSummaryAsTagDescription = true;
-                //    settings.PostProcess = document =>
-                //    {
-                //        document.Info.Version = ServiceInfo.Version;
-                //        document.Info.Title = ServiceInfo.ServiceName;
-                //        document.Info.Description = ServiceInfo.Description;
-                //        document.Info.TermsOfService = ServiceInfo.Description;
-                //    };
-                //    settings.AddSecurity("身份认证Token", Enumerable.Empty<string>(), new NSwag.OpenApiSecurityScheme()
-                //    {
-                //        Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）",
-                //        Name = "Authorization",
-                //        In = NSwag.OpenApiSecurityApiKeyLocation.Header,
-                //        Type = NSwag.OpenApiSecuritySchemeType.ApiKey
-                //    });
-                //}).AddFluentValidationRulesToSwagger();
-                #endregion
-
                 //添加NSwag
-                services.AddSwaggerDocument(settings =>
+                services.AddOpenApiDocument(settings =>
                 {
                     settings.DocumentName = description.GroupName;
                     settings.Version = description.GroupName;
@@ -143,6 +95,7 @@ namespace Adnc.Shared.WebApi.Registrar
                     settings.Description = ServiceInfo.Description;
                     settings.ApiGroupNames = new string[] { description.GroupName };
                     settings.UseControllerSummaryAsTagDescription = true;
+
                     settings.AddSecurity("身份认证Token", Enumerable.Empty<string>(), new NSwag.OpenApiSecurityScheme()
                     {
                         Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）",
@@ -150,54 +103,10 @@ namespace Adnc.Shared.WebApi.Registrar
                         In = NSwag.OpenApiSecurityApiKeyLocation.Header,
                         Type = NSwag.OpenApiSecuritySchemeType.ApiKey
                     });
-                });
+                }).AddFluentValidationRulesToSwagger();
             }
 
             return services;
-        }
-
-        /// <summary>
-        /// 注册swagger组件
-        /// </summary>
-        public static IServiceCollection AddSwaggerGen(this IServiceCollection Services, IServiceInfo ServiceInfo)
-        {
-            var openApiInfo = new OpenApiInfo { Title = ServiceInfo.ShortName, Version = ServiceInfo.Version };
-            //Services.AddEndpointsApiExplorer();
-            Services
-                .AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc(openApiInfo.Version, openApiInfo);
-
-                // 采用bearer token认证
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                    {
-                        Name = "Authorization",
-                        Type = SecuritySchemeType.ApiKey,
-                        Scheme = "Bearer",
-                        BearerFormat = "JWT",
-                        In = ParameterLocation.Header,
-                        Description = "JWT Authorization header using the Bearer scheme."
-                    });
-                //设置全局认证
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                    {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                    });
-                    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{ServiceInfo.StartAssembly.GetName().Name}.xml"));
-                })
-                .AddFluentValidationRulesToSwagger();
-
-            return Services;
         }
     }
 

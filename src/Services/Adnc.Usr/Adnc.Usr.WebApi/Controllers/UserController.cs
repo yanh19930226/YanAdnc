@@ -96,7 +96,7 @@ public class UserController : AdncControllerBase
     /// <param name="status">状态</param>
     /// <returns></returns>
     [HttpPut("{id}/status")]
-    [ApiVersion("1.0")]
+    //[ApiVersion("1.0")]
     [AdncAuthorize(PermissionConsts.User.ChangeStatus)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> ChangeStatus([FromRoute] long id, [FromBody] SimpleDto<int> status)
@@ -168,5 +168,7 @@ public class UserController : AdncControllerBase
     public ActionResult<List<SysUser>> Test() 
     {
         return _userService.GetUserTestAsync();
+
+        //return Result( _userService.GetUserTestAsync());
     }
 }

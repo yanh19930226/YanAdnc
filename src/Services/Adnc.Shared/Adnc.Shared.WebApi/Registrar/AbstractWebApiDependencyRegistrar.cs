@@ -21,8 +21,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Adnc.Shared.WebApi.Registrar
@@ -97,9 +95,7 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddAuthentication<TAuthenticationProcessor>(Configuration, ServiceInfo)
             .AddAuthorization<TAuthorizationHandler>(Configuration, ServiceInfo)
             .AddCors(Configuration, ServiceInfo)
-            .AddSwagger(ServiceInfo)
-            //.AddSwaggerGen(ServiceInfo)
-            .AddMiniProfiler(Configuration, ServiceInfo);
+            .AddSwagger(ServiceInfo);
         }
         #endregion
 
@@ -175,9 +171,6 @@ namespace Adnc.Shared.WebApi.Registrar
 
             var defaultFilesOptions = new DefaultFilesOptions();
             defaultFilesOptions.DefaultFileNames.Clear();
-            defaultFilesOptions.DefaultFileNames.Add("index.html");
-
-
             App
                 .UseDefaultFiles(defaultFilesOptions)
                 .UseStaticFiles()
@@ -188,21 +181,21 @@ namespace Adnc.Shared.WebApi.Registrar
             if (environment.IsDevelopment())
             {
                 //IdentityModelEventSource.ShowPII = true;
-                //App.UseMiniProfiler();
             }
 
             App.UseOpenApi()
-               .UseSwaggerUi3(options =>
-               {
-                   options.SetSpanEditable();
-               })
-                //.UseHealthChecks($"/{consulOptions.Value.HealthCheckUrl}", new HealthCheckOptions()
-                //{
-                //    Predicate = _ => true,
-                //// 该响应输出是一个json，包含所有检查项的详细检查结果
-                //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                //})
-                .UseRouting();
+                  .UseSwaggerUi3(options =>
+                  {
+                      options.SetSpanEditable();
+                  })
+
+                            //.UseHealthChecks($"/{consulOptions.Value.HealthCheckUrl}", new HealthCheckOptions()
+                            //{
+                            //    Predicate = _ => true,
+                            //// 该响应输出是一个json，包含所有检查项的详细检查结果
+                            //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                            //})
+                            .UseRouting();
 
             //.UseHttpMetrics();
             //DotNetRuntimeStatsBuilder
