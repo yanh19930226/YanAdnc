@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Applications\AutoMapper\" />
+    <Folder Include="Applications\BloomFilters\" />
+    <Folder Include="Applications\Caching\" />
+    <Folder Include="Applications\Registrar\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Adnc.Shared\Adnc.Shared.WebApi\Adnc.Shared.WebApi.csproj" />
+  </ItemGroup>
+
+</Project>

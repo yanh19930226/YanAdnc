@@ -31,7 +31,7 @@ namespace Adnc.Usr.WebApi
                 //Start
                 await app
                     .ChangeThreadPoolSettings()
-                    //.UseRegistrationCenter()
+                    .UseRegistrationCenter()
                     .RunAsync();
             }
             catch (Exception ex)

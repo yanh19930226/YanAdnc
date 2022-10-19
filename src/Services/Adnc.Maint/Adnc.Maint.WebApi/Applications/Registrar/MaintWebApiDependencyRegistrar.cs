@@ -26,11 +26,8 @@ public sealed class MaintWebApiDependencyRegistrar : AbstractWebApiDependencyReg
 
     public override void AddAdncApplication()
     {
-
-        //var RabbitMqSection = Configuration.GetSection(RabbitMqConfig.Name);
-        //var RpcAddressInfo = Configuration.GetSection(AddressNode.Name).Get<List<AddressNode>>();
-
         AddApplicaitonDefault();
+
         //rpc-rest
         var restPolicies = this.GenerateDefaultRefitPolicies();
         Services.AddRestClient<IAuthRestClient>(Configuration, RpcAddressInfo,RpcConsts.UsrService, restPolicies);

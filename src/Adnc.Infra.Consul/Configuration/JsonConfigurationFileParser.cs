@@ -1,12 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace Adnc.Infra.Consul.Configuration
+﻿namespace Adnc.Infra.Consul.Configuration
 {
     internal class JsonConfigurationFileParser
     {
@@ -16,7 +8,7 @@ namespace Adnc.Infra.Consul.Configuration
 
         private readonly IDictionary<string, string> _data = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private readonly Stack<string> _context = new Stack<string>();
-        private string _currentPath;
+        private string _currentPath = string.Empty;
 
         public static IDictionary<string, string> Parse(Stream input)
             => new JsonConfigurationFileParser().ParseStream(input);
@@ -36,7 +28,7 @@ namespace Adnc.Infra.Consul.Configuration
             {
                 if (doc.RootElement.ValueKind != JsonValueKind.Object)
                 {
-                    throw new FormatException("数据格式不正确");
+                    throw new FormatException("data is invalid");
                 }
                 VisitElement(doc.RootElement);
             }
@@ -81,13 +73,13 @@ namespace Adnc.Infra.Consul.Configuration
                     var key = _currentPath;
                     if (_data.ContainsKey(key))
                     {
-                        throw new FormatException($"键{key}重复定义");
+                        throw new FormatException($"duplicate key[{key}]");
                     }
                     _data[key] = value.ToString();
                     break;
 
                 default:
-                    throw new FormatException("数据格式不正确");
+                    throw new FormatException("Formater is invalid");
             }
         }
 

@@ -8,7 +8,8 @@ namespace Adnc.Infra.Core.Adnc.Configuration
 {
     public class KestrelConfig
     {
-        public const string Name = "Kestrel";
+
+        public static readonly string Name = "Kestrel";
 
         public IDictionary<string, Endpoint> Endpoints { get; set; }
 

@@ -1,5 +1,4 @@
-
-namespace Adnc.Maint.WebApi
+namespace Adnc.Whse.WebApi
 {
     internal static class Program
     {

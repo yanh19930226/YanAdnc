@@ -37,7 +37,7 @@ public class CacheKeyBloomFilter : AbstractBloomFilter
             if (dictIds.IsNotNullOrEmpty())
                 values.AddRange(dictIds.Select(x => string.Concat(CachingConsts.DictSingleKeyPrefix, CachingConsts.LinkChar, x)));
 
-            var cfgRepository = scope.ServiceProvider.GetRequiredService<IBaseRepository<SysDict>>();
+            var cfgRepository = scope.ServiceProvider.GetRequiredService<IBaseRepository<SysCfg>>();
             var cfgIds = await dictRepository
                 .GetAll()
                 .Select(x => x.Id)

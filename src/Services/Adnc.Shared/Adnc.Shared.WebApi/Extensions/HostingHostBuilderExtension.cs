@@ -1,4 +1,5 @@
-﻿using Adnc.Infra.Core.Adnc.Interfaces;
+﻿using Adnc.Infra.Core.Adnc.Configuration;
+using Adnc.Infra.Core.Adnc.Interfaces;
 using Adnc.Infra.Core.System.Extensions.String;
 using Adnc.Shared.WebApi.Registrar;
 using Microsoft.AspNetCore.Builder;
@@ -78,15 +79,18 @@ public static class WebApplicationBuilderExtension
         builder.Configuration.AddInMemoryCollection(initialData);
         builder.Configuration.AddJsonFile($"{AppContext.BaseDirectory}/appsettings.shared.{builder.Environment.EnvironmentName}.json", true, true);
         builder.Configuration.AddJsonFile($"{AppContext.BaseDirectory}/appsettings.{builder.Environment.EnvironmentName}.json", true, true);
+
+        //是否加载Consul中的配置
         if (builder.Environment.IsProduction() || builder.Environment.IsStaging())
         {
-            //var consulOption = builder.Configuration.GetSection(ConsulConfig.Name).Get<ConsulConfig>();
-            //if(consulOption.ConsulKeyPath.IsNullOrWhiteSpace())
-            //    throw new NotImplementedException(nameof(consulOption.ConsulKeyPath));
+            var consulOption = builder.Configuration.GetSection(ConsulConfig.Name).Get<ConsulConfig>();
+            if (consulOption.ConsulKeyPath.IsNullOrWhiteSpace())
+                throw new NotImplementedException(nameof(consulOption.ConsulKeyPath));
 
-            //consulOption.ConsulKeyPath = consulOption.ConsulKeyPath.Replace("$SHORTNAME", serviceInfo.ShortName);
-            //builder.Configuration.AddConsulConfiguration(consulOption, true);
+            consulOption.ConsulKeyPath = consulOption.ConsulKeyPath.Replace("$SHORTNAME", serviceInfo.ShortName);
+            builder.Configuration.AddConsulConfiguration(consulOption, true);
         }
+
         OnSettingConfigurationChanged(builder.Configuration);
 
         //ServiceCollection

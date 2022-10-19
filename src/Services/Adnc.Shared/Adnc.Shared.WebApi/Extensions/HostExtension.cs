@@ -14,11 +14,11 @@ public static class HostExtension
     {
         var configuration = host.Services.GetService<IConfiguration>();
         var serviceInfo = host.Services.GetService<IServiceInfo>();
-        var registeredType = configuration.GetRegisteredType().ToLower();
+        var registeredType = configuration?.GetRegisteredType().ToLower();
         switch (registeredType)
         {
             case RegisteredTypeConsts.Consul:
-                //host.RegisterToConsul(serviceInfo.Id);
+                host.RegisterToConsul(serviceInfo?.Id);
                 break;
             case RegisteredTypeConsts.Nacos:
                 // TODO

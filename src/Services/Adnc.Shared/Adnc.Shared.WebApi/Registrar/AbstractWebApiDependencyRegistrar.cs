@@ -114,7 +114,7 @@ namespace Adnc.Shared.WebApi.Registrar
             .AddValidatorsFromAssembly(ServiceInfo.StartAssembly, ServiceLifetime.Scoped)
             .AddAdncInfraAutoMapper(ServiceInfo.StartAssembly)
             .AddAdncInfraYitterIdGenerater(RedisSection)
-            //.AddAdncInfraConsul(ConsulSection)
+            .AddAdncInfraConsul(ConsulSection)
             .AddAdncInfraDapper()
             .AddAppliactionSerivcesWithInterceptors(ServiceInfo)
             .AddApplicaitonHostedServices()
@@ -184,18 +184,17 @@ namespace Adnc.Shared.WebApi.Registrar
             }
 
             App.UseOpenApi()
-                  .UseSwaggerUi3(options =>
-                  {
-                      options.SetSpanEditable();
-                  })
-
-                            //.UseHealthChecks($"/{consulOptions.Value.HealthCheckUrl}", new HealthCheckOptions()
-                            //{
-                            //    Predicate = _ => true,
-                            //// 该响应输出是一个json，包含所有检查项的详细检查结果
-                            //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                            //})
-                            .UseRouting();
+               .UseSwaggerUi3(options =>
+               {
+                   options.SetSpanEditable();
+               })
+               //.UseHealthChecks($"/{consulOptions.Value.HealthCheckUrl}", new HealthCheckOptions()
+               //{
+               //    Predicate = _ => true,
+               //// 该响应输出是一个json，包含所有检查项的详细检查结果
+               //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+               //})
+               .UseRouting();
 
             //.UseHttpMetrics();
             //DotNetRuntimeStatsBuilder

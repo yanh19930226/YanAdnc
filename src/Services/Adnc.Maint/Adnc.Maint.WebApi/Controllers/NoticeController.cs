@@ -1,6 +1,4 @@
-﻿
-
-namespace Adnc.Maint.WebApi.Controllers;
+﻿namespace Adnc.Maint.WebApi.Controllers;
 
 /// <summary>
 /// 通知管理
