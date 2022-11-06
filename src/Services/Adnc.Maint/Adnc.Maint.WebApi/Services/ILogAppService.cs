@@ -1,6 +1,4 @@
-﻿
-
-namespace Adnc.Maint.Application.Contracts.Services;
+﻿namespace Adnc.Maint.Application.Contracts.Services;
 
 /// <summary>
 /// 日志查询

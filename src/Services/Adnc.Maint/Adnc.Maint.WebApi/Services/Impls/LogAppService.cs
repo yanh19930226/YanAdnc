@@ -1,6 +1,4 @@
-﻿
-
-namespace Adnc.Maint.Application.Services;
+﻿namespace Adnc.Maint.Application.Services;
 
 public class LogAppService : AbstractAppService, ILogAppService
 {

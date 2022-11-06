@@ -1,9 +1,4 @@
-﻿using Adnc.Infra.Core.Adnc.Configuration;
-using Adnc.Shared.Application.Registrar;
-using Adnc.Shared.Rpc;
-using Adnc.Shared.Rpc.Rest.Services;
-
-namespace Adnc.Maint.WebApi.Registrar;
+﻿namespace Adnc.Maint.WebApi.Registrar;
 
 public sealed class MaintWebApiDependencyRegistrar : AbstractWebApiDependencyRegistrar
 {

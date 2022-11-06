@@ -1,4 +1,5 @@
-﻿namespace Adnc.Maint.Application.Contracts.Services;
+﻿
+namespace Adnc.Maint.Application.Contracts.Services;
 
 /// <summary>
 /// 通知管理

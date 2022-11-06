@@ -1,4 +1,5 @@
-﻿namespace Adnc.Maint.Application.Contracts.Dtos;
+﻿
+namespace Adnc.Maint.Application.Contracts.Dtos;
 
 [Serializable]
 public class DictDto : OutputDto

@@ -1,5 +1,4 @@
 ﻿
-
 namespace Adnc.Maint.Application.Contracts.Services;
 
 /// <summary>

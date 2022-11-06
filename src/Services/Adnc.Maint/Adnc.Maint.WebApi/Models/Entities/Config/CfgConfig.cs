@@ -1,7 +1,4 @@
-﻿
-
-
-namespace Adnc.Maint.Entities.Config;
+﻿namespace Adnc.Maint.Entities.Config;
 
 public class CfgConfig : AbstractEntityTypeConfiguration<SysCfg>
 {

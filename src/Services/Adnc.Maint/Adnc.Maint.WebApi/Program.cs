@@ -9,8 +9,8 @@ namespace Adnc.Maint.WebApi
             logger.Debug($"init {nameof(Program.Main)}");
             try
             {
-                var webApiAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-                var serviceInfo = Adnc.Shared.WebApi.Registrar.ServiceInfo.CreateInstance(webApiAssembly);
+                var webApiAssembly = Assembly.GetExecutingAssembly();
+                var serviceInfo = ServiceInfo.CreateInstance(webApiAssembly);
 
                 //Configuration,ServiceCollection,Logging,WebHost(Kestrel)
                 var app = WebApplication

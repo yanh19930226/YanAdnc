@@ -1,5 +1,4 @@
 ﻿namespace Adnc.Maint.Application.Services;
-
 public class DictAppService : AbstractAppService, IDictAppService
 {
     private readonly IBaseRepository<SysDict> _dictRepository;
