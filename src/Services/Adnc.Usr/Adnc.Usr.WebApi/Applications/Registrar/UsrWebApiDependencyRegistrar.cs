@@ -1,10 +1,4 @@
-﻿using Adnc.Shared.WebApi.Registrar;
-using Adnc.Usr.WebApi.Authentication;
-using Adnc.Usr.WebApi.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Adnc.Usr.WebApi.Registrar;
+﻿namespace Adnc.Usr.WebApi.Registrar;
 
 public  class UsrWebApiDependencyRegistrar : AbstractWebApiDependencyRegistrar
 {

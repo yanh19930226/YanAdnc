@@ -1,10 +1,5 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using NLog;
-using NLog.Web;
-using System;
-using System.Threading.Tasks;
+
+
 
 namespace Adnc.Usr.WebApi
 {
@@ -17,7 +12,7 @@ namespace Adnc.Usr.WebApi
             try
             {
                 var webApiAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-                var serviceInfo = Adnc.Shared.WebApi.Registrar.ServiceInfo.CreateInstance(webApiAssembly);
+                var serviceInfo =ServiceInfo.CreateInstance(webApiAssembly);
 
                 //Configuration,ServiceCollection,Logging,WebHost(Kestrel)
                 var app = WebApplication

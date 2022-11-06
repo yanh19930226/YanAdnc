@@ -1,18 +1,4 @@
-﻿using Adnc.Infra.Caching;
-using Adnc.Infra.Core.Adnc.Configuration;
-using Adnc.Infra.Repository.IRepositories;
-using Adnc.Shared.Application.Caching;
-using Adnc.Shared.Consts.Caching.Usr;
-using Adnc.Usr.Application.Contracts.Dtos;
-using Adnc.Usr.Entities;
-using Adnc.Usr.WebApi.Models.Vos.Users;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 
 namespace Adnc.Usr.Application.Caching;
 

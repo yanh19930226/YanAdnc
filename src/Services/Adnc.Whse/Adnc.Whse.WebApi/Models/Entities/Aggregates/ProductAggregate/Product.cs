@@ -1,4 +1,6 @@
-﻿namespace Adnc.Whse.Domain.Aggregates.ProductAggregate;
+﻿using Adnc.Infra.Core.Adnc.Guard;
+
+namespace Adnc.Whse.Domain.Aggregates.ProductAggregate;
 
 public class Product : AggregateRootWithBasicAuditInfo
 {

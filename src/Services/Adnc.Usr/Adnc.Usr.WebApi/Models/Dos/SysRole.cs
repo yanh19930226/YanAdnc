@@ -1,6 +1,4 @@
-﻿using Adnc.Infra.Repository.Entities;
-using System.Collections.ObjectModel;
-
+﻿
 namespace Adnc.Usr.Entities;
 
 /// <summary>

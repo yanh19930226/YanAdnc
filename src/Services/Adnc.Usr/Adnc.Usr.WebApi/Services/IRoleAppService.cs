@@ -1,12 +1,4 @@
-﻿using Adnc.Infra.Caching.Core.Interceptor;
-using Adnc.Shared.Application.Contracts.Attributes;
-using Adnc.Shared.Application.Contracts.Interfaces;
-using Adnc.Shared.Application.Contracts.ResultModels;
-using Adnc.Shared.Application.Contracts.Vos;
-using Adnc.Shared.Consts.Caching.Usr;
-using Adnc.Usr.Application.Contracts.Dtos;
-using System.Threading.Tasks;
-
+﻿
 namespace Adnc.Usr.Application.Contracts.Services
 {
     /// <summary>

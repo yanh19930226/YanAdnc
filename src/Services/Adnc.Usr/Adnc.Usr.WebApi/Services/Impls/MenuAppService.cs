@@ -1,19 +1,4 @@
-﻿using Adnc.Infra.Core.System.Extensions.String;
-using Adnc.Infra.Helper;
-using Adnc.Infra.IdGenerater.Yitter;
-using Adnc.Infra.Repository.IRepositories;
-using Adnc.Shared.Application.Contracts.ResultModels;
-using Adnc.Shared.Application.Services;
-using Adnc.Usr.Application.Caching;
-using Adnc.Usr.Application.Contracts.Dtos;
-using Adnc.Usr.Application.Contracts.Services;
-using Adnc.Usr.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-
+﻿
 namespace Adnc.Usr.Application.Services;
 
 public class MenuAppService : AbstractAppService, IMenuAppService

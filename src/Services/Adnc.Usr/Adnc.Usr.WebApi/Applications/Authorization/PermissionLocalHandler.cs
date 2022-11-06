@@ -1,8 +1,4 @@
-﻿using Adnc.Shared.WebApi.Authorization;
-using Adnc.Usr.Application.Contracts.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
+﻿
 namespace Adnc.Usr.WebApi.Authorization;
 
 public sealed class PermissionLocalHandler : AbstractPermissionHandler

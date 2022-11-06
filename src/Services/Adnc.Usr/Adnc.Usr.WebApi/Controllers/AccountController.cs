@@ -1,20 +1,4 @@
-﻿using Adnc.Infra.Core.Adnc.Configuration;
-using Adnc.Infra.Core.System.Extensions.String;
-using Adnc.Shared;
-using Adnc.Shared.WebApi.Authentication.JwtBearer;
-using Adnc.Shared.WebApi.Controller;
-using Adnc.Usr.Application.Contracts.Services;
-using Adnc.Usr.WebApi.Models.Dtos.Users;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using NSwag.Annotations;
-using System.IdentityModel.Tokens.Jwt;
-using System.Threading.Tasks;
-
-namespace Adnc.Usr.WebApi.Controllers;
+﻿namespace Adnc.Usr.WebApi.Controllers;
 
 /// <summary>
 /// 认证服务

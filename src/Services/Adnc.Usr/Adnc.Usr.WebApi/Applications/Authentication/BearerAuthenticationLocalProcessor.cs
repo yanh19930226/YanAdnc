@@ -1,6 +1,4 @@
-﻿using Adnc.Shared.WebApi.Authentication;
-using Adnc.Usr.Application.Contracts.Services;
-using System.Threading.Tasks;
+﻿
 
 namespace Adnc.Usr.WebApi.Authentication;
 

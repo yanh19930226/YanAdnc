@@ -1,5 +1,4 @@
-﻿using Adnc.Infra.Repository.Entities;
-
+﻿
 namespace Adnc.Usr.Entities;
 
 /// <summary>

@@ -1,11 +1,4 @@
-﻿using Adnc.Infra.Repository.IRepositories.Models;
-using Adnc.Shared.Application.Contracts.Vos;
-using Adnc.Usr.Application.Contracts.Dtos;
-using Adnc.Usr.Entities;
-using Adnc.Usr.WebApi.Models.Dtos.Users;
-using Adnc.Usr.WebApi.Models.Vos.Users;
-using AutoMapper;
-
+﻿
 namespace Adnc.Usr.Application.AutoMapper;
 
 public sealed class UsrProfile : Profile

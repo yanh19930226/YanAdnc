@@ -1,7 +1,4 @@
-﻿using Adnc.Shared.Consts.Entity.Usr;
-using Adnc.Shared.Repository.EfEntities.Config;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
+﻿
 namespace Adnc.Usr.Entities.Config;
 
 public class DetpConfig : AbstractEntityTypeConfiguration<SysDept>

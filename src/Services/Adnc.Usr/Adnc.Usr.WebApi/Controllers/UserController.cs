@@ -1,21 +1,4 @@
-﻿using Adnc.Shared;
-using Adnc.Shared.Application.Contracts.Dtos;
-using Adnc.Shared.Application.Contracts.Vos;
-using Adnc.Shared.Consts.Permissions.Usr;
-using Adnc.Shared.WebApi.Authorization;
-using Adnc.Shared.WebApi.Controller;
-using Adnc.Usr.Application.Contracts.Services;
-using Adnc.Usr.Entities;
-using Adnc.Usr.WebApi.Models.Dtos.Users;
-using Adnc.Usr.WebApi.Models.Vos.Users;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using NSwag.Annotations;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
+﻿
 namespace Adnc.Usr.WebApi.Controllers;
 
 /// <summary>
