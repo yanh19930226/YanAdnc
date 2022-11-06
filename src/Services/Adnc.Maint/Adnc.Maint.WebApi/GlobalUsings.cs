@@ -63,6 +63,9 @@ global using Adnc.Shared.Application.Contracts.Dtos.Outputs;
 global using Adnc.Share.WebApi.Application.Caching;
 global using Adnc.Shared.Application.Contracts.Dtos.Searchs;
 global using Adnc.Infra.Core.System.Extensions.Collection;
+global using Adnc.Shared.Application.Contracts.Dtos.Inputs;
+global using JsonSerializer = System.Text.Json.JsonSerializer;
+
 
 
 

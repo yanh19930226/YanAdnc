@@ -1,7 +1,4 @@
 ﻿
-
-
-
 namespace Adnc.Maint.Application.EventSubscribers;
 
 /// <summary>

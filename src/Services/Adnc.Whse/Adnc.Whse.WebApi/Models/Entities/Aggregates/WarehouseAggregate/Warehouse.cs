@@ -1,6 +1,5 @@
 ﻿using Adnc.Infra.Core.Adnc.Exceptions;
 using Adnc.Infra.Core.Adnc.Guard;
-using Adnc.Shared.Domain.Entities;
 
 namespace Adnc.Whse.Domain.Aggregates.WarehouseAggregate;
 

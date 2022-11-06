@@ -1,5 +1,7 @@
 ﻿
 
+
+
 namespace Adnc.Maint.Application.Contracts.Dtos;
 
 public class DictCreationDto : IInputDto
